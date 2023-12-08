@@ -1,5 +1,5 @@
-import { Card } from "@mui/material";
-import styles from "./style.module.css";
+import { Card } from '@mui/material';
+import styles from './style.module.css';
 
 function BottomCard({ children, ...rest }) {
   return (
