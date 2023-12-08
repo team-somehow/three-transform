@@ -15,21 +15,22 @@ client=OpenAI(api_key=gpt_api_key)
 
 @app.route('/',methods=['GET',"POST"])
 def home():
-    user_answer_1="There should be ability to transfer property easily"
-    user_answer_2="The property prices should be stored"
-    user_approach="Implement transfer of property using Smart contract"
-    prompt = f"Given the answers: {user_answer_1} and {user_answer_2}, and the approach: {user_approach}, write a smart contract code by testing it before."
+
+    # return jsonify({"response":request.get_json()})
+    user_answer_1=request.get_json()['answer1']
+    user_approach=request.get_json()['approach']
+    prompt = f"Given the answer: {user_answer_1}, and the approach: {user_approach}, write a smart contract code by testing it before make the contract detailed."
     schema={
         "type":"object",
         "properties":{
             "code":{
                 "type":"string",
-                "description":"Give only the solidity code"
+                "description":"Give only the detailed solidity code after testing"
             },
             "details":
             {
                 "type":"string",
-                "description":"All the remaining details"
+                "description":"All the remaining details regarding the contract"
             }
         },
         "required":['code','details']
@@ -38,11 +39,10 @@ def home():
         model="gpt-3.5-turbo-1106",
         messages=[
                 {"role": "system", "content": prompt},
-                {"role": "user", "content": f"Answer 1: {user_answer_1}"},
-                {"role": "assistant", "content": "Your first answer content here."},
-                {"role": "user", "content": f"Answer 2: {user_answer_2}"},
-                {"role": "assistant", "content": "Your second answer content here."},
-                {"role": "user", "content": f"Approach: {user_approach}"},
+                {"role": "assistant", "content": f"Question 1: What features do you want your smart contract to implement"},
+                {"role": "user", "content": f"{user_answer_1}"},
+                {"role": "assistant", "content": f"Approach: The approach given by the user"},
+                {"role": "user", "content": f"{user_approach}"},
         ],
         functions=[{"name": "print", "parameters": schema}],
         function_call={"name": "print"},
