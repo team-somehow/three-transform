@@ -4,6 +4,7 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  z-index: 3;
 }
 
 body {
@@ -24,6 +25,7 @@ body::after {
   height: 504px;
   filter: blur(250px);
   animation: motion 10s alternate infinite ease-in-out;
+  z-index: 1;
 }
 
 @keyframes motion {

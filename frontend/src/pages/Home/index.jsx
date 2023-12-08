@@ -10,6 +10,8 @@ import { FaMagic } from "react-icons/fa";
 
 import BottomCard from "../../components/BottomCard";
 import GradientButton from "../../components/GradientButton";
+import LinkInput from "../../components/LinkInput";
+import React from "react";
 
 const steps = [
   {
@@ -27,14 +29,31 @@ const steps = [
 ];
 
 function Home() {
+  const [inputLink, setInputLink] = React.useState("");
+
   return (
-    <Box>
+    <Box
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+      flexDirection="column"
+      width="80%"
+      mx="auto"
+      height="calc(100vh - 8rem)"
+    >
+      <Box width="60%" mx="auto" pt={6}>
+        <LinkInput onChange={(e) => setInputLink(e.target.value)} />
+        <Typography align="center" variant="body1">
+          Streamlined Web3 Integration Made Simple!
+        </Typography>
+      </Box>
       <BottomCard
         sx={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           flexDirection: "column",
+          width: "100%",
         }}
       >
         <CardContent>
@@ -50,7 +69,7 @@ function Home() {
           </List>
         </CardContent>
         <CardActions sx={{ mt: 3 }}>
-          <GradientButton icon={<FaMagic />} />
+          <GradientButton icon={<FaMagic />} text="Start the Magic!" />
         </CardActions>
       </BottomCard>
     </Box>
