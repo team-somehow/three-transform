@@ -1,0 +1,6 @@
+.Card {
+  border-radius: 32px;
+  border: 1px solid #eeeef0;
+  background: linear-gradient(180deg, #2b243c 0%, #0b031e 100%);
+  padding: 3.125em 2rem;
+}
