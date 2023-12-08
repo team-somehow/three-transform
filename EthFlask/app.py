@@ -3,6 +3,10 @@ from flask_cors import CORS
 from openai import OpenAI
 import json
 import os
+from subprocess import run
+
+from subprocess import Popen, PIPE
+import subprocess
 
 gpt_api_key=os.environ.get("OPENAI_API_KEY")
 app = Flask(__name__,static_url_path='/static/', static_folder='static/')
@@ -112,3 +116,41 @@ def web_scrape():
     )
     print(response.choices[0].message.function_call.arguments)
     return jsonify({"response":json.loads(response.choices[0].message.function_call.arguments)})
+
+
+@app.route('/rest-api',methods=['GET','POST'])
+def RESTAPI():
+    abi=request.get_json()['abi']
+    print(abi)
+    response=[]
+    for i in abi:
+        temp={}
+        if i['type']=='constructor':
+            continue
+        temp['name']=i['name']
+        temp['inputs']=[]
+        for j in i['inputs']:
+            if j['name']=="":
+                temp["inputs"].append({
+                    "address":"string"
+                })
+                continue
+            temp['inputs'].append({
+                j['name']:j['type']
+            })
+        temp['outputs']=[]
+        if "outputs" in i:
+            print(i['outputs'])
+            for j in i['outputs']:
+                temp['outputs'].append({
+                    "type":j['type']
+                })
+            
+        response.append(temp)
+
+
+
+
+    return jsonify(response)
+
+
