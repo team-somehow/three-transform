@@ -3,7 +3,7 @@ import styles from "./style.module.css";
 
 function BottomCard({ children, ...rest }) {
   return (
-    <Card className={styles.Card} {...rest}>
+    <Card component="div" className={styles.Card} {...rest}>
       {children}
     </Card>
   );

@@ -1,4 +1,5 @@
 import {
+  Box,
   CardActions,
   CardContent,
   List,
@@ -27,7 +28,7 @@ const steps = [
 
 function Home() {
   return (
-    <div>
+    <Box>
       <BottomCard
         sx={{
           display: "flex",
@@ -52,7 +53,7 @@ function Home() {
           <GradientButton icon={<FaMagic />} />
         </CardActions>
       </BottomCard>
-    </div>
+    </Box>
   );
 }
 

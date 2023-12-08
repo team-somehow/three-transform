@@ -1,15 +1,23 @@
-import { createBrowserRouter } from "react-router-dom";
+import { Outlet, createBrowserRouter } from "react-router-dom";
 import NotFound from "../pages/NotFound";
 import Home from "../pages/Home";
+import Navbar from "../components/Navbar";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <>
-        <Home />
+        <Navbar />
+        <Outlet />
       </>
     ),
+    children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
+    ],
   },
   {
     path: "*",
