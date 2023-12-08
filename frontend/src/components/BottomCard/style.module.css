@@ -1,5 +1,10 @@
+.CardBorder {
+  background: linear-gradient(180deg, #EEEEF0 0%, #eeeef000 100%);
+  padding: 1px;
+}
+
 .Card {
-  border: 1px solid #eeeef0;
-  background: linear-gradient(180deg, #2b243c 0%, #0b031e 100%);
-  padding: 3.125em 2rem;
+  background: linear-gradient(180deg, #2B243C 0%, #0B031E 100%);
+  height: 100%;
+  width: 100%;
 }
