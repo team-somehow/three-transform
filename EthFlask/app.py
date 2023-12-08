@@ -48,7 +48,7 @@ def home():
 
 @app.route('/scrape',methods=['GET',"POST"])
 def web_scrape():
-    website_url = "https://facebook.com"
+    website_url = request.args.get('url')
     prompt = """
         Assume I am from the tech team of a web2 app hosted at "{}" 
         (now onwards whenever I use the following words  "web app" or "app" or "web application" or alike I am referring to the web2 app hosted at "{}") 
@@ -103,7 +103,7 @@ def web_scrape():
         "description": "Schema for representing various approaches to integrate a smart contract into the \"web application\".",
     }
     response=client.chat.completions.create(
-        model="gpt-3.5-turbo-1106",
+        model="gpt-4",
         messages=[
             {"role": "system", "content": prompt},
         ],
