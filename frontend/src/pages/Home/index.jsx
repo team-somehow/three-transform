@@ -5,6 +5,7 @@ import {
   List,
   ListItem,
   Typography,
+  Button,
 } from '@mui/material';
 import { FaMagic } from 'react-icons/fa';
 
@@ -41,7 +42,7 @@ function Home() {
       mx="auto"
       height="calc(100vh - 8rem)"
     >
-      <Box width="60%" mx="auto" pt={4}>
+      <Box width="60%" mx="auto" pt={4} mb={3}>
         <LinkInput onChange={(e) => setInputLink(e.target.value)} />
         <Typography align="center" variant="body1">
           Streamlined web3 integration made simple!
@@ -58,19 +59,40 @@ function Home() {
         }}
       >
         <CardContent>
-          <Typography variant="h2" mb={3}>
+          <Typography variant="h2" mb={2} fontWeight={700} align="center">
             Three Simple Steps!
           </Typography>
           <List sx={{ listStyleType: 'number' }}>
             {steps.map(({ id, text }) => (
               <ListItem key={id} sx={{ display: 'list-item' }}>
-                <Typography variant="h6">{text}</Typography>
+                <Typography variant="h5" fontWeight={500}>
+                  {text}
+                </Typography>
               </ListItem>
             ))}
           </List>
         </CardContent>
-        <CardActions sx={{ mt: 3 }}>
+        <CardActions
+          sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}
+        >
           <GradientButton icon={<FaMagic />} text="Start the Magic!" />
+          <Box sx={{ display: 'flex' }} >
+            <img
+              src="creditIcon.svg"
+              alt="text"
+              style={{
+                display: 'block',
+                width: '1.4rem',
+              }}
+            />
+            <Typography variant="body2" px={1}>
+              1 Credit
+            </Typography>
+          </Box>
+
+          {/* <Button color="primary" variant="contained">
+            Start the Magic!
+          </Button> */}
         </CardActions>
       </BottomCard>
     </Box>

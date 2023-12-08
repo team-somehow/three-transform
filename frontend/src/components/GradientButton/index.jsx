@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button } from '@mui/material';
 
 function GradientButton({ icon, text, ...rest }) {
   return (
@@ -6,7 +6,7 @@ function GradientButton({ icon, text, ...rest }) {
       startIcon={icon || null}
       disableElevation
       sx={{
-        borderRadius: 2,
+        borderRadius: 6,
         background: `var(--brand-mix, conic-gradient(
       from 180deg at 50% 50%,
       #b52bba 4.666563235223293deg,
@@ -26,10 +26,11 @@ function GradientButton({ icon, text, ...rest }) {
       #c729b9 331.67617321014404deg
     )
   )`,
-        boxShadow: "0px 0px 60px 0px rgba(236, 39, 182, 0.6)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+        boxShadow: '0px 0px 60px 0px rgba(236, 39, 182, 0.6)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: '0.75rem 2rem',
       }}
       variant="contained"
       {...rest}

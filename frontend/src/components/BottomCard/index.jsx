@@ -1,11 +1,13 @@
-import { Card } from '@mui/material';
+import { Box } from '@mui/material';
 import styles from './style.module.css';
 
 function BottomCard({ children, ...rest }) {
   return (
-    <Card component="div" className={styles.Card} {...rest}>
-      {children}
-    </Card>
+    <Box className={styles.CardBorder} {...rest}>
+      <Box className={styles.Card} {...rest}>
+        {children}
+      </Box>
+    </Box>
   );
 }
 
