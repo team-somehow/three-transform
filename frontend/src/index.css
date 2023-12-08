@@ -8,4 +8,29 @@
 
 body {
   font-family: sans-serif;
+  position: relative;
+  min-width: 100vw;
+  min-height: 100vh;
+}
+body::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transform-origin: center center;
+  background: #c00dc8;
+  width: 504px;
+  height: 504px;
+  filter: blur(250px);
+  animation: motion 10s alternate infinite ease-in-out;
+}
+
+@keyframes motion {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
 }
