@@ -17,7 +17,7 @@ import LightButton from "../../components/LightButton";
 import YellowButton from "../../components/YellowButton";
 import { FaCode, FaDownload } from "react-icons/fa";
 import { MdArrowForwardIos } from "react-icons/md";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import { instance } from "../../config/axios";
@@ -25,6 +25,7 @@ import { encode } from "base-64";
 import axios from "axios";
 import { db } from "../../config/firebase";
 import { AppContext } from "../../context/AppContext";
+import { TestContext } from "../../context/TestContext";
 const tempSteps = [
   {
     id: "01",
@@ -77,6 +78,8 @@ function EditorPage() {
   const [tabsLayout, setTabsLayout] = useState([25, 45, 30]);
   const [isDisabled, setIsDisabled] = useState(true);
   const [contractName, setContractName] = useState("");
+  const isTest = React.useContext(TestContext);
+
 
   const handleDownloadHardhat = async () => {
     axios
@@ -100,7 +103,7 @@ function EditorPage() {
         approach_heading: state?.selectedOption?.heading,
         approach_content: state?.selectedOption?.content,
         user_approach: inputQuestions,
-        is_test: true,
+        is_test: isTest,
       });
       setCode("//" + response?.data?.response?.solidity_code);
       setSummary(response?.data?.response?.details?.additional_notes);

@@ -7,23 +7,19 @@ import { auth } from '../../config/firebase';
 function GoogleLogin() {
   const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
 
-  if (error) {
-    return (
-      <div>
-        <p>Error: {error.message}</p>
-      </div>
-    );
-  }
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+  // if (error) {
+  //   return (
+  //     <div>
+  //       <p>Error: {error.message}</p>
+  //     </div>
+  //   );
+  // }
+  // if (loading) {
+  //   return <p>Loading...</p>;
+  // }
   if (user) {
-    return (
-      <div>
-        <p>Signed In User:</p>
-        {console.log(user)}
-      </div>
-    );
+    // redirect to home
+    window.location.href = '/';
   }
   return (
     <Box
