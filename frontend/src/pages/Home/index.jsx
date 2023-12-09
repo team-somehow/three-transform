@@ -34,7 +34,7 @@ const steps = [
 
 function Home() {
   const navigate = useNavigate();
-  const [inputLink, setInputLink] = useState("https://reddit.com/");
+  const [inputLink, setInputLink] = useState("https://www.reddit.com/");
 
   const [loading, setLoading] = useState(false);
 
