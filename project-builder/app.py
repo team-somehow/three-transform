@@ -6,8 +6,16 @@ import os
 import random
 from subprocess import run
 import subprocess
+from lighthouseweb3 import Lighthouse
+lighthouseKeys='189af0ba.4f431b7ecc314f4ea25273a574b88111'
+print(lighthouseKeys)
+lh = Lighthouse(token=lighthouseKeys)
+def uploadFile(address):
+    upload = lh.upload(source=address)
+    return upload
 
 gpt_api_key=os.environ.get("OPENAI_API_KEY")
+lighthouseKeys=os.environ.get("LIGHTHOUSE")
 app = Flask(__name__,static_url_path='/static/', static_folder='static/')
 
 
@@ -24,6 +32,7 @@ def hardhatCompiler():
     run(['bash','script.sh',name])
     shutil.make_archive(f'static/{name}','zip',name)
     print("Zip file made")
+
     return jsonify({"filename":f"/static/{name}.zip"})
 
 
@@ -66,8 +75,12 @@ def getABI():
     run(['bash','script.sh',name])
     shutil.make_archive(f'static/{name}/artifacts','zip',f"{name}/artifacts")
     print("Zip file made")
-    return jsonify({"filename":f"/static/{name}/artifacts.zip"})
+    upload=uploadFile(f'./static/{name}/artifacts.zip')
+    return jsonify({"filename":f"/static/{name}/artifacts.zip","CID":upload['data']['Hash']})
+
+
 
 
 if __name__=="__main__":
+    uploadFile('artifiacts.zip','/setup-32744/artifacts.zip')
     app.run(host='127.0.0.1',port=5002)
