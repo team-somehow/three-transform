@@ -13,7 +13,7 @@ import {
   where,
 } from "firebase/firestore";
 
-function AuthWrapper({ onLoginNavigateTo, children }) {
+function AuthWrapper({ children }) {
   const auth = useAuth();
   const navigate = useNavigate();
 
@@ -25,7 +25,6 @@ function AuthWrapper({ onLoginNavigateTo, children }) {
       const timeOut = setTimeout(async () => {
         if (auth.isLoggedIn && auth?.user) {
           setLoading(false);
-          navigate(onLoginNavigateTo);
 
           const { user } = auth || {};
           const q = query(
@@ -48,7 +47,7 @@ function AuthWrapper({ onLoginNavigateTo, children }) {
       }, 1000);
     };
     login();
-  }, [auth, navigate, onLoginNavigateTo]);
+  }, [auth, navigate]);
 
   if (loading) return <>Loading...</>;
   return <>{children}</>;
