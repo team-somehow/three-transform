@@ -9,6 +9,7 @@ import subprocess
 from lighthouseweb3 import Lighthouse
 from web3 import Web3
 from solcx import compile_source
+import json
 lighthouseKeys='189af0ba.4f431b7ecc314f4ea25273a574b88111'
 lh = Lighthouse(token=lighthouseKeys)
 def uploadFile(address):
@@ -32,9 +33,13 @@ def hardhatCompiler():
         sol_file.write(data['testing'])
     run(['bash','script.sh',name])
     shutil.make_archive(f'static/{name}','zip',name)
-    print("Zip file made")
-    upload=uploadFile(f'./static/{name}.zip')
-    return jsonify({"filename":f"/static/{name}.zip","CID":upload['data']['Hash']})
+    Hardhat=uploadFile(f'./static/{name}.zip')
+    shutil.make_archive(f'static/{name}/artifacts','zip',f"{name}/artifacts")
+    ABI=uploadFile(f'./static/{name}/artifacts.zip')
+    abi=""
+    with open(f"{name}/artifacts/contracts/{data['contractName']}.sol/{data['contractName']}.json","r") as sol_file:
+        abi=sol_file.read()
+    return jsonify({"HardHat":f"https://gateway.lighthouse.storage/ipfs/{Hardhat['data']['Hash']}","ABI_URI":f"https://gateway.lighthouse.storage/ipfs/{ABI['data']['Hash']}","ABI":json.loads(abi)})
 
 
 @app.route('/hardhatDeploy',methods=['GET','POST'])
