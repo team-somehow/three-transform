@@ -44,6 +44,8 @@ def generate_code():
         Ensure that the generated Solidity code:
         1. Compiles without errors.
         2. Is complete and ready for deployment.
+        3. The version of Solidity used is "0.8.0" and SPDX-License-Identifier should be "MIT".
+        4. Create a 'transferTo' function in a smart contract that allows the owner to transfer ownership to a specified address. Only the current owner should have the privilege to invoke this function.
 
         Note: Consider best practices and security considerations for smart contracts during the development.
     """
@@ -67,19 +69,15 @@ def generate_code():
                 "properties": {
                     "compilation_status_confidence": {
                         "type": "integer",
-                        "minimum": 1,
-                        "maximum": 100,
                         "description": "Confidence level (between 1 and 100 - 1 being least confident that it will compile successfully and 100 being completely sure that it will compile successfully) for the compilation status of the generated Solidity code.",
                     },
                     "completeness_confidence": {
                         "type": "integer",
-                        "minimum": 1,
-                        "maximum": 100,
                         "description": "Confidence level (between 1 and 100 - 1 being least confident that it will compile successfully and 100 being completely sure that it will compile successfully) for the completeness of the generated Solidity code.",
                     },
                     "additional_notes": {
                         "type": "string",
-                        "description": "Any additional notes or comments related to the generated Solidity code.",
+                        "description": "Describe all the functions of the smart contract except the 'transferTo' function. Provide a brief description of the contract's functionality and any other relevant details",
                     },
                 },
                 "required": ["compilation_status_confidence", "completeness_confidence"],
@@ -278,12 +276,12 @@ web_scrape_flipkart_website_response = {
 
 generate_code_test_response = {
     "response": {
-        "contract_name": "RedditVotingSystem",
+        "contract_name": "RedditVoting",
         "details": {
-            "additional_notes": "This contract includes all the functions for a basic voting system. Users can create posts or comments and then upvote or downvote them. There's a function to check the total number of votes on a specific post or comment, and a function check what vote a specific user gave to a post or comment.",
+            "additional_notes": "This smart contract enables upvoting and downvoting of posts in a Reddit-like platform. All votes are stored on the Ethereum blockchain to ensure transparency. A post's unique hash is used as the key to record votes. The constructor sets the contract deployer as the initial owner. The contract includes an 'onlyOwner' modifier to restrict certain operations to the owner address. A 'transferTo' function allows the owner to transfer ownership to another Ethereum address. Note: the contract does not include any logic to authenticate users beyond their Ethereum address. Therefore, any Ethereum account can interact with the contract and cast votes.",
             "compilation_status_confidence": 1,
             "completeness_confidence": 1
         },
-        "solidity_code": "\npragma solidity ^0.5.0;\n\ncontract RedditVotingSystem{\n\n    struct Vote {\n        address voter;\n        bool choice;\n    }\n    \n    struct PostOrComment {\n        uint voteCount;\n        mapping(address => Vote) votes;\n    }\n    \n    mapping(uint => PostOrComment) public postsOrComments;\n    uint public totalPostsOrComments;\n    \n    function createPostOrComment() public returns (uint) {\n        totalPostsOrComments ++;\n        PostOrComment storage pc = postsOrComments[totalPostsOrComments];\n        pc.voteCount = 0;\n        return totalPostsOrComments;\n    }\n    \n    function upVote(uint _postOrCommentId) public {\n        PostOrComment storage pc = postsOrComments[_postOrCommentId];\n        \n        require(pc.votes[msg.sender].voter != msg.sender, 'User has already voted');\n        \n        pc.votes[msg.sender].choice = true;\n        pc.votes[msg.sender].voter = msg.sender;\n        pc.voteCount += 1;\n    }\n    \n    function downVote(uint _postOrCommentId) public {\n        PostOrComment storage pc = postsOrComments[_postOrCommentId];\n        \n        require(pc.votes[msg.sender].voter != msg.sender, 'User has already voted');\n        \n        pc.votes[msg.sender].choice = false;\n        pc.votes[msg.sender].voter = msg.sender;\n        pc.voteCount -= 1;\n    }\n    \n    function checkVote(uint _postOrCommentId, address _user) public view returns(bool){\n        PostOrComment storage pc = postsOrComments[_postOrCommentId];\n        return pc.votes[_user].choice;\n    }\n    \n    function checkTotalVotes(uint _postOrCommentId) public view returns(uint) {\n        PostOrComment storage pc = postsOrComments[_postOrCommentId];\n        return pc.voteCount;\n    }\n}\n"
+        "solidity_code": "--SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\ncontract RedditVoting {\n\n    address public owner;\n    mapping(address => mapping(bytes32 => bool)) public upvotes;\n    mapping(address => mapping(bytes32 => bool)) public downvotes;\n    mapping(bytes32 => uint256) public score;\n\n    constructor() {\n        owner = msg.sender;\n    }\n\n    modifier onlyOwner() {\n        require(msg.sender == owner, \"Only owner can call this function.\");\n        _;\n    }\n\n    function upvote(bytes32 _hash) public {\n        require(!downvotes[msg.sender][_hash], \"Cannot upvote a downvoted post.\");\n        upvotes[msg.sender][_hash] = true;\n        score[_hash]++;\n    }\n\n    function downvote(bytes32 _hash) public {\n        require(!upvotes[msg.sender][_hash], \"Cannot downvote an upvoted post.\");\n        downvotes[msg.sender][_hash] = true;\n        score[_hash]--;\n    }\n\n    function getPostScore(bytes32 _hash) public view returns (uint256) {\n        return score[_hash];\n    }\n\n    function transferTo(address newOwner) public onlyOwner {\n        owner = newOwner;\n    }\n}"
     }
 }
