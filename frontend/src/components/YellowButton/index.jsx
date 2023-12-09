@@ -1,10 +1,11 @@
 import { Box, Button } from '@mui/material';
 
-function YellowButton({ text, icon, ...rest }) {
+function YellowButton({ text, isDisabled, icon, ...rest }) {
   return (
     <Button
       startIcon={icon || null}
       disableElevation
+      disabled={isDisabled}
       sx={{
         borderRadius: 0.5,
         border: '2px solid #2E3C51',
@@ -16,6 +17,10 @@ function YellowButton({ text, icon, ...rest }) {
         '&:hover': {
           background: '#F5DC22',
         },
+        "&.Mui-disabled": {
+          background: "#F5DC22",
+          color: "grey"
+        }
       }}
       variant="contained"
       {...rest}
