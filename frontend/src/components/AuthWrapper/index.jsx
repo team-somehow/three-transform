@@ -27,8 +27,8 @@ function AuthWrapper({ children }) {
 
           const { user } = auth || {};
           const q = query(
-            collection(db, 'users'),
-            where('address', '==', user.address)
+            collection(db, "users"),
+            where("uid", "==", user.address)
           );
           const docs = await getDocs(q);
           if (docs.docs.length === 0) {

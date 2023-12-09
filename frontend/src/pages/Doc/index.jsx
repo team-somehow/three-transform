@@ -11,7 +11,7 @@ import { FaPython } from "react-icons/fa";
 import { useState } from "react";
 import axios from "axios";
 
-import { collection, getDoc, query, where } from "firebase/firestore";
+import { collection, doc, getDoc, query, where } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { AppContext } from "../../context/AppContext";
 
@@ -70,6 +70,7 @@ function Doc() {
   const [toggle, setToggle] = useState("react");
   const [selectedFunction, setSelectedFunction] = useState(functions[0]);
   const { user } = useContext(AppContext);
+
   const handleArtifactDownload = async () => {
     setTimeout(() => {
       window.open(
@@ -103,15 +104,11 @@ function Doc() {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const q = query(
-        collection(db, "users"),
-        where("address", "==", user.address)
-      );
-      const _user = await getDoc(q);
-      console.log(_user);
+      const response = await getDoc(doc(db, "users", user?.address));
+      console.log(response.data());
     };
     fetchData();
-  }, []);
+  }, [user]);
 
   return (
     <Box

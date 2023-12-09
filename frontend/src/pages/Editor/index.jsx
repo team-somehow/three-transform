@@ -88,7 +88,7 @@ function EditorPage() {
         {
           code: code,
           testing: "",
-          contractName: "VotingSystem",
+          contractName: contractName,
         }
       );
       await updateDoc(doc(db, "users", user?.address), {
@@ -97,6 +97,7 @@ function EditorPage() {
           abi: response?.data?.ABI,
           abiUrl: response?.data?.ABI_URI,
           hardhatUrl: response?.data?.HardHat,
+          contractName: response.data.ABI.contractName,
         },
       });
     } catch (error) {
@@ -114,7 +115,6 @@ function EditorPage() {
       });
       setCode("//" + response?.data?.response?.solidity_code);
       setSummary(response?.data?.response?.details?.additional_notes);
-      console.log(user?.address);
       updateDoc(doc(db, "users", user.address), {
         snippet: {
           approach_heading: state?.selectedOption?.heading,
