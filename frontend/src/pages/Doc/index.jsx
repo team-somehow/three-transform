@@ -1,103 +1,69 @@
-import { Box, ListItem, Typography, Divider } from "@mui/material";
-import { Code, shadesOfPurple } from "react-code-blocks";
-import { HashLink } from "react-router-hash-link";
+import { Box, ListItem, Typography, Divider, Button } from '@mui/material';
+import { Code, shadesOfPurple, CopyBlock } from 'react-code-blocks';
+import { HashLink } from 'react-router-hash-link';
+import { FaDownload } from 'react-icons/fa';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { IoLogoJavascript } from 'react-icons/io5';
+import { FaReact } from 'react-icons/fa';
+import { FaPython } from 'react-icons/fa';
+import { useState } from 'react';
 
 const data = [
   {
     id: 1,
-    text: "Initial Setup",
-    subheadings: [
-      {
-        id: 1,
-        heading: "Obtain ABI and Integrate into Frontend",
-        description:
-          "Retrieve the ABI (Application Binary Interface) of the smart contract and seamlessly integrate it into the frontend code to facilitate communication between the user interface and the blockchain",
-      },
-      {
-        id: 2,
-        heading: " Implement Arcana Login for Wallet Address Retrieval",
-        description:
-          "Integrate Arcana login functionality to enable users to log in, ensuring a secure and user-friendly experience while obtaining their wallet address for subsequent interactions with the smart contract.",
-      },
-      {
-        id: 3,
-        heading: "Integrate Contract Connection Code",
-        description:
-          "Embed the contract connection code directly into the relevant file where it is required, ensuring a smooth and efficient connection between the frontend and the smart contract on the blockchain.",
-      },
-      {
-        id: 4,
-        heading: "Customize Contract Function Calls",
-        description:
-          'Tailor the code to invoke the specific contract function based on the requirements, ensuring accurate and efficient execution. For example, initiate the function "sendName" with the parameter "name" for the desired blockchain interaction.',
-      },
-    ],
+    text: 'Initial setup',
+    description:
+      'Download the ABI from above and paste the files in the frontend folder.',
   },
   {
     id: 2,
-    text: "Function Endpoints",
-    code: [
-      {
-        inputs: [
-          {
-            user: "address",
-          },
-          {
-            name: "string",
-          },
-        ],
-        name: "NameSet",
-        outputs: [],
-      },
-      {
-        inputs: [
-          {
-            _user: "address",
-          },
-        ],
-        name: "getUserName",
-        outputs: [
-          {
-            type: "string",
-          },
-        ],
-      },
-      {
-        inputs: [],
-        name: "owner",
-        outputs: [
-          {
-            type: "address",
-          },
-        ],
-      },
-      {
-        inputs: [
-          {
-            _name: "string",
-          },
-        ],
-        name: "setUserName",
-        outputs: [],
-      },
-      {
-        inputs: [
-          {
-            address: "string",
-          },
-        ],
-        name: "userNames",
-        outputs: [
-          {
-            type: "string",
-          },
-        ],
-      },
-    ],
+    text: 'Download dependencies',
+  },
+  {
+    id: 3,
+    text: 'Custom functions',
+  },
+];
+
+const functions = ['getName', 'setName', 'whoName', 'weName'];
+
+const snippets = [
+  {
+    id: 1,
+    type: 'react',
+    text: 'Import',
+    code: `import { Contract, ethers, providers } from "ethers";`,
+  },
+  {
+    id: 2,
+    type: 'react',
+    text: 'Get signature and smart contract',
+    code: `const provider = new providers.Web3Provider(window.ethereum);
+const signer = provider.getSigner();
+const contract = new Contract([depployed_contract_address], [contract_name].abi, signer);`,
+  },
+  {
+    id: 3,
+    type: 'react',
+    text: 'Integrate the system',
+    code: `if (window.ethereum) {
+await window.ethereum.enable();
+
+const result = await contract.[function_name](
+    param_1],
+    param_2]
+);
+
+result.wait();
+}`,
   },
 ];
 
 function Doc() {
+  const [toggle, setToggle] = useState('react');
+  const [selectedFunction, setSelectedFunction] = useState(functions[0]);
+
   return (
     <Box
       display="flex"
@@ -108,35 +74,35 @@ function Doc() {
     >
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "row",
-          width: "100%",
-          height: "100%",
-          borderRadius: "1rem",
-          border: "1px solid rgba(255, 255, 255, 0.20)",
-          background: "linear-gradient(180deg, #2B243C 0%, #0B031E 100%)",
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'row',
+          width: '100%',
+          height: '100%',
+          borderRadius: '1rem',
+          border: '1px solid rgba(255, 255, 255, 0.20)',
+          background: 'linear-gradient(180deg, #2B243C 0%, #0B031E 100%)',
         }}
       >
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            width: "20%",
-            height: "100%",
+            display: 'flex',
+            flexDirection: 'column',
+            width: '20%',
+            height: '100%',
             p: 2,
           }}
         >
           {data.map(({ id, text }) => (
-            <ListItem key={id} sx={{ display: "list-item" }}>
+            <ListItem key={id} sx={{ display: 'list-item' }}>
               <Typography
-                variant="body"
+                variant="body2"
                 fontWeight={500}
                 component={HashLink}
                 color="white"
-                sx={{ textDecoration: "none" }}
-                to={"#" + text.replace(/\s+/g, "-").toLowerCase()}
+                sx={{ textDecoration: 'none' }}
+                to={'#' + text.replace(/\s+/g, '-').toLowerCase()}
               >
                 {text}
               </Typography>
@@ -146,116 +112,187 @@ function Doc() {
         <Divider
           orientation="vertical"
           sx={{
-            bgcolor: "#EEEEF0",
+            bgcolor: '#EEEEF0',
           }}
         />
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            width: "80%",
-            height: "100%",
+            display: 'flex',
+            flexDirection: 'column',
+            width: '80%',
+            height: '100%',
             p: 2,
             pr: 10,
-            scrollBehavior: "smooth",
-            overflow: "auto",
+            ml: 2,
+            scrollBehavior: 'smooth',
+            overflow: 'auto',
           }}
         >
-          {data.map(({ id, text, subheadings, code }) => (
-            <Box key={id} id={text.replace(/\s+/g, "-").toLowerCase()}>
-              <Typography variant="h4" fontWeight={700} mt={1}>
+          {data.map(({ id, text, description }) => (
+            <Box key={id} id={text.replace(/\s+/g, '-').toLowerCase()}>
+              <Typography variant="h4" fontWeight={600} mt={1}>
                 {text}
               </Typography>
-              {subheadings?.map(({ id, heading, description }) => (
-                <Box key={id} mb={3} ml={3}>
-                  <Typography variant="h5" fontWeight={700} mt={4} mb={1.5}>
-                    {`${id}. `}
-                    {heading}
-                  </Typography>
-                  <Typography variant="body" fontWeight={500}>
-                    {description}
-                    {description}
-                    {description}
-                    {description}
-                    {description}
-                  </Typography>
+              <Divider sx={{ mt: 1, mb: 2, bgcolor: '#2E3C51' }} />
+              <Typography variant="body" fontWeight={500} mt={1}>
+                {description}
+              </Typography>
+              {id === 1 && (
+                <Box
+                  my={2}
+                  sx={{
+                    display: 'flex',
+                    gap: '5px',
+                  }}
+                >
+                  <Button variant="contained" startIcon={<FaDownload />}>
+                    Download Artifacts
+                  </Button>
+                  <img src="arrow.svg" alt="------>" />
+                  <Button variant="outlined" startIcon={<FaDownload />}>
+                    Copy files to frontend
+                  </Button>
                 </Box>
-              ))}
-              {code?.map((endpoint, index) => (
-                <Box key={index} mb={3} ml={3}>
-                  <Typography variant="h5" fontWeight={700} mt={3} mb={1.5}>
-                    {index + 1}. {endpoint.name}
-                    {`()`}
-                  </Typography>
-                  <Divider
-                    sx={{
-                      bgcolor: "grey",
+              )}
+              {id === 2 && (
+                <Box
+                  my={2}
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <CopyBlock
+                    text={'npm install ethers'}
+                    language={'shell'}
+                    theme={shadesOfPurple}
+                    showLineNumbers={false}
+                    customStyle={{
+                      padding: '10px',
                     }}
                   />
-                  {endpoint.inputs?.[0] && (
-                    <Typography variant="h6" fontWeight={600} mt={2} mb={1.5}>
-                      Parameters
-                    </Typography>
-                  )}
-                  {endpoint.inputs?.map((input, index) => {
-                    const [key, value] = Object.entries(input)[0];
-                    return (
-                      <Box
-                        key={index}
-                        sx={{
-                          display: "flex",
-                          flexDirection: "row",
-                          gap: 2,
-                          mb: 1,
-                          ml: 1,
-                        }}
-                      >
-                        <Code
-                          text={key}
-                          language={"javascript"}
-                          theme={shadesOfPurple}
-                        />
-                        <Code
-                          text={value}
-                          language={"javascript"}
-                          theme={shadesOfPurple}
-                        />
-                      </Box>
-                    );
-                  })}
-                  {endpoint.outputs?.[0] && (
-                    <Typography variant="h6" fontWeight={600} mt={2} mb={1.5}>
-                      Response
-                    </Typography>
-                  )}
-                  {endpoint.outputs?.map((input, index) => {
-                    const [key, value] = Object.entries(input)[0];
-                    return (
-                      <Box
-                        key={index}
-                        sx={{
-                          display: "flex",
-                          flexDirection: "row",
-                          gap: 2,
-                          mb: 1,
-                          ml: 1,
-                        }}
-                      >
-                        <Code
-                          text={key}
-                          language={"javascript"}
-                          theme={shadesOfPurple}
-                        />
-                        <Code
-                          text={value}
-                          language={"javascript"}
-                          theme={shadesOfPurple}
-                        />
-                      </Box>
-                    );
-                  })}
+                  <Typography variant="body" fontWeight={500} mt={2}>
+                    {`Note: make sure that `}
+                    <Code
+                      text={'windows.ether'}
+                      language={'env'}
+                      theme={shadesOfPurple}
+                      showLineNumbers={false}
+                    />
+                    {` exists in the enviournment variable `}
+                  </Typography>
                 </Box>
-              ))}
+              )}
+              {id === 3 && (
+                <Box
+                  my={2}
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    width: '100%',
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid #2E3C51',
+                    borderRadius: '0.5rem',
+                    p: '0.5rem',
+                    gap: '0.5rem',
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      width: '30%',
+                      borderRadius: '0.5rem',
+                      background: 'rgba(255, 255, 255, 0.10)',
+                      p: '0.5rem',
+                    }}
+                  >
+                    <Typography variant="body" fontWeight={600} my={1} ml={1}>
+                      Function Names
+                    </Typography>
+                    <Divider sx={{ mt: 1 }} />
+                    {functions.map((funcName, index) => (
+                      <ListItem
+                        variant="body"
+                        mt={2}
+                        key={index}
+                        sx={{
+                          color:
+                            selectedFunction === funcName ? 'white' : '#EEEEF0',
+                          fontWeight:
+                            selectedFunction === funcName ? '600' : '400',
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => setSelectedFunction(funcName)}
+                      >
+                        {`${funcName}()`}
+                      </ListItem>
+                    ))}
+                  </Box>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      width: '100%',
+                      borderRadius: '0.5rem',
+                      p: '0.5rem',
+                      background: 'rgba(255, 255, 255, 0.10)',
+                    }}
+                  >
+                    <ToggleButtonGroup
+                      value={toggle}
+                      exclusive
+                      onChange={(e) => {
+                        setToggle(e.target.value);
+                      }}
+                      size="small"
+                      sx={{
+                        color: 'white',
+                      }}
+                    >
+                      <ToggleButton value="javascript">
+                        <IoLogoJavascript style={{ marginRight: '0.3rem' }} />
+                        Javascript
+                      </ToggleButton>
+                      <ToggleButton value="react">
+                        <FaReact style={{ marginRight: '0.3rem' }} />
+                        React
+                      </ToggleButton>
+                      <ToggleButton value="python">
+                        <FaPython style={{ marginRight: '0.3rem' }} />
+                        Python
+                      </ToggleButton>
+                    </ToggleButtonGroup>
+                    <Divider sx={{ mt: 1 }} />
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        padding: '0.5rem',
+                      }}
+                    >
+                      {snippets.map(({ id, text, code }) => (
+                        <Box key={id} mb={3}>
+                          <Typography variant="body" fontWeight={600}>
+                            {text}
+                          </Typography>
+                          <CopyBlock
+                            text={code}
+                            language={'jsx'}
+                            theme={shadesOfPurple}
+                            showLineNumbers={false}
+                            wrapLongLines
+                            customStyle={{
+                              padding: '10px',
+                              marginTop: '10px',
+                            }}
+                          />
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
+                </Box>
+              )}
             </Box>
           ))}
         </Box>
