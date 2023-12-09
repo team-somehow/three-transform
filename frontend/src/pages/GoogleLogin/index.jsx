@@ -5,14 +5,41 @@ import { useSignInWithGoogle, useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../config/firebase';
 import { Link } from 'react-router-dom';
 import Modal from '@mui/material/Modal';
+import axios from 'axios';
 
 function GoogleLogin() {
   const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [walletAddress, setWalletAddress] = useState('');
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.post(
+          'https://3p-bff.oktostage.com/api/v1/wallet',
+          {
+            // Add any required data for the request body
+          },
+          {
+            headers: {
+              Authorization:
+                'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2luZGN4X2lkIjoiZTZlZGZmNTEtNWJkZS00NDMyLWFiMDktZWNlODZlNzQ3Y2JmIiwidXNlcl9pZCI6ImU2ZWRmZjUxLTViZGUtNDQzMi1hYjA5LWVjZTg2ZTc0N2NiZiIsInNoYXJlZF9pZCI6bnVsbCwicG9ydGZvbGlvRmFjdG9yIjoiMSIsInNlc3Npb25JZCI6IjNiZWJlYzAxLWI5MjAtNDY2NC1iMDAwLTM5OWUyZjg1NzI1OSIsInVzZXJfbG9naW5fdmVuZG9yX2lkIjoiYmMzOTM3YTktYWQ3OS00NTMwLTg3ZGYtNTg5YjRiYzY3MjI1IiwicyI6Im9rdG9fYW5kcm9pZCIsInNpcCI6Ijo6ZmZmZjoxMjcuMC4wLjYiLCJvdiI6Im9rdG9fcGx1cyIsImxvZ2luX21lZGl1bSI6IkdfQVVUSCIsImlhdCI6MTcwMjEzODMxOSwiZXhwIjoxNzAzMDAyMzE5fQ.y_TcsP7wPl1U6wCltD40DAdwNUlxqoZNG6wd-iGvGoU', // Replace with your actual access token
+              'x-api-key': '55d4c32e-2139-4690-8ef4-abfd75c73bdd',
+            },
+          }
+        );
+
+        console.log(response.data?.data);
+        setWalletAddress(response.data?.data?.wallets[0]?.address);
+
+        setIsModalOpen(true);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     if (user) {
-      setIsModalOpen(true);
+      fetchData();
     }
   }, [user]);
 
@@ -137,9 +164,8 @@ function GoogleLogin() {
           <Typography variant="body2" mb={2}>
             This is your wallet address:
           </Typography>
-          {/* Display the user's wallet address here */}
-          <Typography variant="body1" mb={2}>
-            {user?.walletAddress}
+          <Typography variant="body2" mb={2} fontWeight={600}>
+            {walletAddress}
           </Typography>
           <Button variant="contained" onClick={handleModalClose}>
             Let's Start
