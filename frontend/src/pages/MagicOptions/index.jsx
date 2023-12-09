@@ -15,10 +15,12 @@ import {
 
 import BottomCard from "../../components/BottomCard";
 import LinkInput from "../../components/LinkInput";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 function MagicOptions() {
   const navigate = useNavigate();
+  const { state } = useLocation();
+  console.log(state);
   const [ideasList, setIdeasList] = useState([
     {
       id: "01",
