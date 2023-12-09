@@ -8,7 +8,6 @@ from subprocess import run
 import subprocess
 from lighthouseweb3 import Lighthouse
 lighthouseKeys='189af0ba.4f431b7ecc314f4ea25273a574b88111'
-print(lighthouseKeys)
 lh = Lighthouse(token=lighthouseKeys)
 def uploadFile(address):
     upload = lh.upload(source=address)
@@ -17,7 +16,7 @@ def uploadFile(address):
 gpt_api_key=os.environ.get("OPENAI_API_KEY")
 lighthouseKeys=os.environ.get("LIGHTHOUSE")
 app = Flask(__name__,static_url_path='/static/', static_folder='static/')
-
+CORS(app)
 
 @app.route('/',methods=['GET','POST'])
 def hardhatCompiler():
@@ -32,7 +31,7 @@ def hardhatCompiler():
     run(['bash','script.sh',name])
     shutil.make_archive(f'static/{name}','zip',name)
     print("Zip file made")
-
+    
     return jsonify({"filename":f"/static/{name}.zip"})
 
 

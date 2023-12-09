@@ -11,8 +11,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@arcana/auth": "^1.0.3",
+    "@arcana/auth-react": "^0.0.3",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@lighthouse-web3/sdk": "^0.3.0",
     "@monaco-editor/react": "^4.6.0",
     "@mui/material": "^5.14.20",
     "axios": "^1.6.2",

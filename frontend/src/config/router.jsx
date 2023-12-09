@@ -6,44 +6,49 @@ import Navbar from "../components/Navbar";
 import Editor from "../pages/Editor";
 import Doc from "../pages/Doc";
 import MagicOptions from "../pages/MagicOptions";
+import Login from "../pages/Login";
 
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: (
-      <Box
-        sx={{
-          height: "100%",
-          width: "100%",
-        }}
-      >
-        <Navbar />
-        <Outlet />
-      </Box>
-    ),
-    children: [
-      {
-        path: "/",
-        element: <Home />,
-      },
-      {
-        path: "editor",
-        element: <Editor />,
-      },
-      {
-        path: "doc",
-        element: <Doc />,
-      },
-      {
-        path: "options",
-        element: <MagicOptions />,
-      },
-    ],
-  },
-  {
-    path: "*",
-    element: <NotFound />,
-  },
+	{
+		path: "/",
+		element: (
+			<Box
+				sx={{
+					height: "100%",
+					width: "100%",
+				}}
+			>
+				<Navbar />
+				<Outlet />
+			</Box>
+		),
+		children: [
+			{
+				path: "/",
+				element: <Home />,
+			},
+			{
+				path: "editor",
+				element: <Editor />,
+			},
+			{
+				path: "doc",
+				element: <Doc />,
+			},
+			{
+				path: "options",
+				element: <MagicOptions />,
+			},
+		],
+	},
+	{
+		path: "/login",
+		element: <Login />,
+	},
+	{
+		path: "*",
+		element: <NotFound />,
+	},
 ]);
 
 export default router;

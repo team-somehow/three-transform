@@ -8,6 +8,7 @@ import { IoLogoJavascript } from 'react-icons/io5';
 import { FaReact } from 'react-icons/fa';
 import { FaPython } from 'react-icons/fa';
 import { useState } from 'react';
+import axios from 'axios'
 
 const data = [
   {
@@ -63,6 +64,10 @@ result.wait();
 function Doc() {
   const [toggle, setToggle] = useState('react');
   const [selectedFunction, setSelectedFunction] = useState(functions[0]);
+
+  const handleArtifactDownload = async () => {
+    // const result=axios.
+  }
 
   return (
     <Box
@@ -145,7 +150,7 @@ function Doc() {
                     gap: '5px',
                   }}
                 >
-                  <Button variant="contained" startIcon={<FaDownload />}>
+                  <Button variant="contained" startIcon={<FaDownload />} onClick={()=>handleArtifactDownload()}>
                     Download Artifacts
                   </Button>
                   <img src="arrow.svg" alt="------>" />
