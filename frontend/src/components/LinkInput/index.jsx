@@ -3,8 +3,6 @@ import { Box, FormControl, InputAdornment, TextField } from "@mui/material";
 import { FaMagic } from "react-icons/fa";
 
 function LinkInput({ isDisabled, defaultValue, ...rest }) {
-  const style = {};
-
   return (
     <FormControl fullWidth sx={{ m: 1, bgcolor: "transparent" }} {...rest}>
       <TextField

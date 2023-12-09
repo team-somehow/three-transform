@@ -20,21 +20,15 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 function MagicOptions() {
   const navigate = useNavigate();
   const { state } = useLocation();
-  const [ideasList, setIdeasList] = useState([]);
+  console.log(state);
 
-  React.useEffect(() => {
-    setIdeasList(
-      state?.options.map((option) => ({
-        id: "",
-        text: option?.content,
-      }))
-    );
-  }, [state]);
-
-  const handleOptionOnClick = (id) => {
-    console.log(id);
-    // Select option with id
-    navigate("/editor");
+  const handleOptionOnClick = (data) => {
+    console.log(data);
+    navigate("/editor", {
+      state: {
+        selectedOption: data,
+      },
+    });
   };
 
   return (
@@ -113,7 +107,7 @@ function MagicOptions() {
                 height: 240,
               }}
             >
-              {ideasList.map(({ id, text }, i) => {
+              {state?.options?.map((option, i) => {
                 return (
                   <ListItem
                     key={i}
@@ -124,7 +118,7 @@ function MagicOptions() {
                       textAlign: "center",
                       my: 2,
                     }}
-                    onClick={() => handleOptionOnClick(id)}
+                    onClick={() => handleOptionOnClick(option)}
                   >
                     <ListItemButton
                       sx={{
@@ -152,7 +146,7 @@ function MagicOptions() {
                           {i + 1}
                         </Box>
                       </ListItemIcon>
-                      <ListItemText align="left" primary={text} />
+                      <ListItemText align="left" primary={option?.content} />
                     </ListItemButton>
                   </ListItem>
                 );
