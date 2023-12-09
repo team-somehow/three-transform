@@ -16,7 +16,7 @@ import { LuHardHat } from 'react-icons/lu';
 import LightButton from '../../components/LightButton';
 import YellowButton from '../../components/YellowButton';
 import { FaCode, FaDownload } from 'react-icons/fa';
-import { MdArrowForwardIos } from "react-icons/md";
+import { MdArrowForwardIos } from 'react-icons/md';
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { enqueueSnackbar } from 'notistack';
@@ -73,7 +73,7 @@ function EditorPage() {
   const [summary, setSummary] = useState('');
   const [tabsLayout, setTabsLayout] = useState([25, 45, 30]);
   const [isDisabled, setIsDisabled] = useState(true);
-  const [contractName, setContractName] = useState("");
+  const [contractName, setContractName] = useState('');
 
   const handleDownloadHardhat = async () => {
     axios
@@ -115,10 +115,10 @@ function EditorPage() {
     }
   };
 
-	useEffect(() => {
-		localStorage.setItem('code', code);
-		localStorage.setItem("contractName", contractName);
-	}, [code, contractName]);
+  useEffect(() => {
+    localStorage.setItem('code', code);
+    localStorage.setItem('contractName', contractName);
+  }, [code, contractName]);
 
   return (
     <Box
@@ -250,7 +250,6 @@ function EditorPage() {
                   width: '100%',
                   height: '100%',
                   // add on hover
-
                 }}
               >
                 <MdArrowForwardIos color="#fff" />
@@ -302,11 +301,6 @@ function EditorPage() {
             }}
           >
             <GradientButton
-              component={Link}
-              to={`https://remix.ethereum.org/?#code=${encode(
-                code
-              )}&autoCompile=true`}
-              target="_blank"
               icon={<GrDeploy />}
               text="Magic Deploy"
               fullWidth
@@ -367,6 +361,11 @@ function EditorPage() {
                 })}
               </Stepper>
               <LightButton
+                component={Link}
+                to={`https://remix.ethereum.org/?#code=${encode(
+                  code
+                )}&autoCompile=true`}
+                target="_blank"
                 text="Open in Remix IDE"
                 icon={<FaCode />}
                 fullWidth
@@ -380,7 +379,8 @@ function EditorPage() {
               border: '1px solid #EEEEF0',
               background: 'rgba(255, 255, 255, 0.10)',
               p: 2,
-              height: '100%',
+              height: 'calc(100% - 30rem)',
+              overflow: 'auto',
             }}
           >
             <Typography fontSize={18} fontWeight="600">
