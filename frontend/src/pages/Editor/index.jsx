@@ -23,7 +23,7 @@ import { enqueueSnackbar } from "notistack";
 import { instance } from "../../config/axios";
 import { encode } from "base-64";
 import axios from "axios";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import uuid4 from "../../helpers/id_generator";
 import { useAuth } from "@arcana/auth-react";
 import { db } from "../../config/firebase";
@@ -105,6 +105,15 @@ function EditorPage() {
       });
       setCode("//" + response?.data?.response?.solidity_code);
       setSummary(response?.data?.response?.details?.additional_notes);
+      updateDoc(doc(db, "users", user.address), {
+        snippet: {
+          approach_heading: state?.selectedOption?.heading,
+          approach_content: state?.selectedOption?.content,
+          user_approach: inputQuestions,
+          solidity_code: response?.data?.response?.solidity_code,
+          details: response?.data?.response?.details?.additional_notes,
+        },
+      });
       if (tabsLayout[0] === 25) {
         setTabsLayout([5, 65, 30]);
         setIsDisabled(false);

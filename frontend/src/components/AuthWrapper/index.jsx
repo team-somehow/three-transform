@@ -3,7 +3,15 @@ import { useAuth } from "@arcana/auth-react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../../config/firebase";
 
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 
 function AuthWrapper({ onLoginNavigateTo, children }) {
   const auth = useAuth();
@@ -26,8 +34,8 @@ function AuthWrapper({ onLoginNavigateTo, children }) {
           );
           const docs = await getDocs(q);
           if (docs.docs.length === 0) {
-            await addDoc(collection(db, "users"), {
-              address: user.address,
+            await setDoc(doc(db, "users", user?.address), {
+              uid: user.address,
               name: user.name,
               authProvider: user.loginType,
               email: user.email,
