@@ -52,7 +52,7 @@ function Home() {
       flexDirection="column"
       width="80%"
       mx="auto"
-      height="calc(100vh - 8rem)"
+      height="calc(100vh - 4rem)"
     >
       <Box width="60%" mx="auto" pt={4} mb={3}>
         <LinkInput onChange={(e) => setInputLink(e.target.value)} />

@@ -10,7 +10,6 @@ function Navbar() {
         justifyContent: 'space-between',
         alignItems: 'center',
         height: '4rem',
-        marginBottom: '2rem',
         px: 3,
       }}
     >
