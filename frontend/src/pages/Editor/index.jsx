@@ -85,6 +85,7 @@ function EditorPage() {
   const [ABI, setABI] = useState();
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [contractAdd, setContractAdd] = useState();
 
   const handleDownloadHardhat = async () => {
     try {
@@ -95,10 +96,11 @@ function EditorPage() {
           code: code,
           testing: '',
           contractName: contractName,
-          is_test:isTest
+          is_test: isTest,
         }
       );
       setABI(response?.data?.ABI);
+      console.log('abi', response?.data?.ABI);
       await updateDoc(doc(db, 'users', user?.address), {
         urls: {
           url: state?.url,
@@ -123,7 +125,7 @@ function EditorPage() {
         user_approach: inputQuestions,
         is_test: isTest,
       });
-      console.log(response?.data?.response)
+      console.log(response?.data?.response);
       setContractName(response?.data?.response?.contract_name);
       setCode('//' + response?.data?.response?.solidity_code);
       setSummary(response?.data?.response?.details?.additional_notes);
@@ -155,12 +157,10 @@ function EditorPage() {
       const response = await axios.post(
         'http://localhost:3003/deploy-contract',
         {
-          bytecode:
-            '0x608060405234801561001057600080fd5b50610762806100206000396000f3fe...',
-          abi: [
-            // ... (your contract ABI)
-          ],
+          bytecode: ABI?.bytecode,
+          abi: ABI?.abi,
           rpc: 'https://rpc.public.zkevm-test.net',
+          is_test: isTest,
         },
         {
           headers: {
@@ -168,16 +168,16 @@ function EditorPage() {
           },
         }
       );
-
+      console.log('deploy', response?.data);
+      setContractAdd(response?.data?.contractAddress);
+      await updateDoc(doc(db, 'users', user?.address), {
+        contractAddress: response?.data?.contractAddress,
+      });
       setIsModalOpen(true);
     } catch (error) {
       console.error(error);
     }
   };
-
-  if (user) {
-    deployContract();
-  }
 
   useEffect(() => {
     localStorage.setItem('code', code);
@@ -186,7 +186,7 @@ function EditorPage() {
 
   const handleModalClose = () => {
     setIsModalOpen(false);
-    window.location.href = '/';
+    window.location.href = '/doc';
   };
 
   return (
@@ -486,16 +486,16 @@ function EditorPage() {
                 bgcolor: 'white',
                 padding: '2rem',
                 textAlign: 'center',
+                display: 'flex',
+                flexDirection: 'column',
               }}
             >
               <Typography variant="h5" mb={2}>
-                Successfully logged in to your account!
+                We have deployed the contract for you
               </Typography>
-              <Typography variant="body2" mb={2}>
-                This is your wallet address:
-              </Typography>
-              <Typography variant="body2" mb={2} fontWeight={600}>
-                {'walletAddress'}
+              <Typography variant="body">Here is the address:</Typography>
+              <Typography variant="body" py={2} fontWeight={600}>
+                {contractAdd}
               </Typography>
               <Button variant="contained" onClick={handleModalClose}>
                 Next
@@ -511,6 +511,7 @@ function EditorPage() {
               borderRadius: 1,
               height: '2.5rem',
             }}
+            onClick={deployContract}
           />
         </Box>
       </Box>
