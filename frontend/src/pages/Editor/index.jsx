@@ -89,8 +89,10 @@ function EditorPage() {
           code: code,
           testing: "",
           contractName: contractName,
+          is_test:isTest
         }
       );
+      console.log(JSON.stringify(response));
       await updateDoc(doc(db, "users", user?.address), {
         snippet: {
           url: state?.url,
@@ -113,6 +115,8 @@ function EditorPage() {
         user_approach: inputQuestions,
         is_test: isTest,
       });
+      console.log(response?.data?.response)
+      setContractName(response?.data?.response?.contract_name);
       setCode("//" + response?.data?.response?.solidity_code);
       setSummary(response?.data?.response?.details?.additional_notes);
       updateDoc(doc(db, "users", user.address), {
