@@ -34,11 +34,9 @@ function AuthWrapper({ children }) {
             await setDoc(doc(db, "users", user?.address), {
               uid: user.address,
               name: user.name,
-              authProvider: user.loginType,
+              authProvider: user?.authProvider,
               email: user.email,
               publicKey: user.publicKey,
-              picture: user.picture,
-              credit: 3,
             });
           }
         }

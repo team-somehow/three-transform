@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Box, ListItem, Typography, Divider, Button } from "@mui/material";
 import { Code, shadesOfPurple, CopyBlock } from "react-code-blocks";
 import { HashLink } from "react-router-hash-link";
@@ -13,6 +13,7 @@ import axios from "axios";
 
 import { collection, getDoc, query, where } from "firebase/firestore";
 import { db } from "../../config/firebase";
+import { AppContext } from "../../context/AppContext";
 
 const data = [
   {
@@ -68,7 +69,7 @@ result.wait();
 function Doc() {
   const [toggle, setToggle] = useState("react");
   const [selectedFunction, setSelectedFunction] = useState(functions[0]);
-
+  const { user } = useContext(AppContext);
   const handleArtifactDownload = async () => {
     setTimeout(() => {
       window.open(

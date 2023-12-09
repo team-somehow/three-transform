@@ -26,6 +26,7 @@ import axios from "axios";
 import { db } from "../../config/firebase";
 import { AppContext } from "../../context/AppContext";
 import { TestContext } from "../../context/TestContext";
+import { collection, doc, updateDoc } from "firebase/firestore";
 const tempSteps = [
   {
     id: "01",
@@ -80,21 +81,27 @@ function EditorPage() {
   const [contractName, setContractName] = useState("");
   const isTest = React.useContext(TestContext);
 
-
   const handleDownloadHardhat = async () => {
-    axios
-      .post("http://127.0.0.1:5001/", {
-        code: code,
-        testing: "",
-        contractName: "VotingSystem",
-      })
-      .then((res) => {
-        console.log(res);
-        console.log(state?.url);
-      })
-      .catch((err) => {
-        console.log(err);
+    try {
+      const response = await axios.post(
+        "https://49c4-2409-40f2-18-f350-f485-a4b8-b5b3-ae50.ngrok-free.app",
+        {
+          code: code,
+          testing: "",
+          contractName: "VotingSystem",
+        }
+      );
+      await updateDoc(doc(db, "users", user?.address), {
+        snippet: {
+          url: state?.url,
+          abi: response?.data?.ABI,
+          abiUrl: response?.data?.ABI_URI,
+          hardhatUrl: response?.data?.HardHat,
+        },
       });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onTabClick = async () => {
@@ -107,6 +114,7 @@ function EditorPage() {
       });
       setCode("//" + response?.data?.response?.solidity_code);
       setSummary(response?.data?.response?.details?.additional_notes);
+      console.log(user?.address);
       updateDoc(doc(db, "users", user.address), {
         snippet: {
           approach_heading: state?.selectedOption?.heading,
