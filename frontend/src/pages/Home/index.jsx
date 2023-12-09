@@ -43,7 +43,9 @@ function Home() {
     setLoading(true);
     try {
       // Simulate an asynchronous operation (API call, etc.)
-      const { data } = await instance.post("/scrape?url=" + inputLink);
+      const { data } = await instance.post(
+        "/scrape?url=" + inputLink + "&is_test=true"
+      );
       if (data?.response?.approaches && data.response.summary) {
         navigate("/options", {
           state: {
