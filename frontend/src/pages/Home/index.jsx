@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Box,
   CardActions,
@@ -10,32 +10,31 @@ import {
   StepLabel,
   Divider,
   Typography,
-} from '@mui/material';
-import LinearProgress from '@mui/material/LinearProgress';
-import { enqueueSnackbar } from 'notistack';
-import { FaCode, FaMagic } from 'react-icons/fa';
-import BottomCard from '../../components/BottomCard';
-import GradientButton from '../../components/GradientButton';
-import LinkInput from '../../components/LinkInput';
-import { instance } from '../../config/axios';
-import { keyframes } from '@emotion/react';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import YellowButton from '../../components/YellowButton';
-import LightButton from '../../components/LightButton';
+} from "@mui/material";
+import LinearProgress from "@mui/material/LinearProgress";
+import { enqueueSnackbar } from "notistack";
+import { FaCode, FaMagic } from "react-icons/fa";
+import BottomCard from "../../components/BottomCard";
+import GradientButton from "../../components/GradientButton";
+import LinkInput from "../../components/LinkInput";
+import { instance } from "../../config/axios";
+import { keyframes } from "@emotion/react";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import LightButton from "../../components/LightButton";
 
 const steps = [
   {
     id: 1,
-    text: 'Share your website URL.',
+    text: "Share your website URL.",
   },
   {
     id: 2,
-    text: 'Receive tailored suggestions on integrating web3 seamlessly.',
+    text: "Receive tailored suggestions on integrating web3 seamlessly.",
   },
   {
     id: 3,
-    text: 'Get a one-click deploy contract for swift implementation.',
+    text: "Get a one-click deploy contract for swift implementation.",
   },
 ];
 const gradientAnimation = keyframes`
@@ -49,7 +48,7 @@ const gradientAnimation = keyframes`
 
 function Home() {
   const navigate = useNavigate();
-  const [inputLink, setInputLink] = useState('https://www.reddit.com/');
+  const [inputLink, setInputLink] = useState("https://www.reddit.com/");
 
   const [loading, setLoading] = useState(false);
 
@@ -59,10 +58,10 @@ function Home() {
     try {
       // Simulate an asynchronous operation (API call, etc.)
       const { data } = await instance.post(
-        '/scrape?url=' + inputLink + '&is_test=true'
+        "/scrape?url=" + inputLink + "&is_test=true"
       );
       if (data?.response?.approaches && data.response.summary) {
-        navigate('/options', {
+        navigate("/options", {
           state: {
             options: data.response.approaches,
             summary: data.response.summary,
@@ -73,8 +72,8 @@ function Home() {
       setLoading(false);
     } catch (error) {
       console.log(error);
-      enqueueSnackbar('Unable to get options', {
-        variant: 'error',
+      enqueueSnackbar("Unable to get options", {
+        variant: "error",
       });
     }
   };
@@ -93,9 +92,9 @@ function Home() {
         <img
           src="home.svg"
           style={{
-            display: 'block',
-            width: '300px',
-            margin: 'auto',
+            display: "block",
+            width: "300px",
+            margin: "auto",
           }}
           alt="Web2 --> Web3"
         />
@@ -106,24 +105,24 @@ function Home() {
       </Box>
       <BottomCard
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'column',
-          width: '100%',
-          borderRadius: '2rem',
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+          width: "100%",
+          borderRadius: "2rem",
         }}
       >
         <CardContent
           sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexDirection: 'column',
-            width: '100%',
-            height: '30rem',
-            borderRadius: '2rem',
-            transition: 'opacity 1s ease-in-out', // Add a smooth transition effect
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+            width: "100%",
+            height: "30rem",
+            borderRadius: "2rem",
+            transition: "opacity 1s ease-in-out", // Add a smooth transition effect
           }}
         >
           {loading ? (
@@ -132,7 +131,7 @@ function Home() {
                 Generating ideas!
               </Typography>
               <LinearProgress
-                sx={{ width: '30%', borderRadius: '1rem', mt: 2 }}
+                sx={{ width: "30%", borderRadius: "1rem", mt: 2 }}
               />
             </>
           ) : (
@@ -141,8 +140,8 @@ function Home() {
                 activeStep={-1}
                 orientation="vertical"
                 sx={{
-                  color: 'white',
-                  overflow: 'auto',
+                  color: "white",
+                  overflow: "auto",
                 }}
               >
                 {steps.map(({ id, text }) => {
@@ -160,10 +159,10 @@ function Home() {
               <CardActions
                 sx={{
                   mt: 3,
-                  display: 'flex',
-                  flexDirection: 'column',
+                  display: "flex",
+                  flexDirection: "column",
                   gap: 1,
-                  width: '100%',
+                  width: "100%",
                 }}
               >
                 <GradientButton
@@ -172,13 +171,13 @@ function Home() {
                   onClick={handleMagicButtonClick}
                   disabled={loading}
                 />
-                <Box sx={{ display: 'flex' }} mb={1}>
+                <Box sx={{ display: "flex" }} mb={1}>
                   <img
                     src="creditIcon.svg"
                     alt="text"
                     style={{
-                      display: 'block',
-                      width: '1.4rem',
+                      display: "block",
+                      width: "1.4rem",
                     }}
                   />
                   <Typography variant="body2" fontSize={12} px={1}>
@@ -187,31 +186,31 @@ function Home() {
                 </Box>
                 <Box
                   sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '30%',
-                    alignItems: 'center',
+                    display: "flex",
+                    flexDirection: "column",
+                    width: "30%",
+                    alignItems: "center",
                     gap: 1,
                   }}
                 >
                   <Box
                     sx={{
-                      display: 'flex',
-                      flexDirection: 'coloumn',
-                      width: '100%',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      margin: 'auto',
+                      display: "flex",
+                      flexDirection: "coloumn",
+                      width: "100%",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      margin: "auto",
                     }}
                   >
                     <Divider
-                      sx={{ bgcolor: 'white', width: '30%', height: '1px' }}
+                      sx={{ bgcolor: "white", width: "30%", height: "1px" }}
                     ></Divider>
                     <Typography variant="body2" fontSize={18} px={1}>
                       or
                     </Typography>
                     <Divider
-                      sx={{ bgcolor: 'white', width: '30%', height: '1px' }}
+                      sx={{ bgcolor: "white", width: "30%", height: "1px" }}
                     ></Divider>
                   </Box>
                   <LightButton

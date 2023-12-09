@@ -1,12 +1,11 @@
-import { Auth } from "@arcana/auth-react";
 import { Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@arcana/auth-react";
-import React from "react";
+import React, { useContext } from "react";
+import { AppContext } from "../context/AppContext";
 
 const Login = () => {
   const navigate = useNavigate();
-  const auth = useAuth();
+  const auth = useContext(AppContext);
 
   React.useEffect(() => {
     if (auth.isLoggedIn && auth.user != null) {
@@ -22,14 +21,14 @@ const Login = () => {
       width="100vw"
       height="100vh"
     >
-      <Auth
+      {/* <Auth
         externalWallet={false}
         theme="dark"
         onLogin={() => {
           navigate("/");
           console.log("Hello");
-        }}
-      ></Auth>
+        }} 
+      ></Auth> */}
     </Box>
   );
 };

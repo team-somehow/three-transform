@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Box,
@@ -11,11 +11,11 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
-} from '@mui/material';
+} from "@mui/material";
 
-import BottomCard from '../../components/BottomCard';
-import LinkInput from '../../components/LinkInput';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import BottomCard from "../../components/BottomCard";
+import LinkInput from "../../components/LinkInput";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 function MagicOptions() {
   const navigate = useNavigate();
@@ -23,9 +23,10 @@ function MagicOptions() {
   console.log(state);
   const handleOptionOnClick = (data) => {
     console.log(data);
-    navigate('/editor', {
+    navigate("/editor", {
       state: {
         selectedOption: data,
+        url: state?.url,
       },
     });
   };
@@ -45,13 +46,13 @@ function MagicOptions() {
         <Typography
           align="center"
           sx={{
-            textAlign: 'center',
-            display: 'block',
-            color: 'inherit',
-            textDecoration: 'none',
-            transition: 'all 0.3s ease-in-out', // Adding transition for a smooth effect
-            '&:hover': {
-              textShadow: '0px 0px 10px #FFF',
+            textAlign: "center",
+            display: "block",
+            color: "inherit",
+            textDecoration: "none",
+            transition: "all 0.3s ease-in-out", // Adding transition for a smooth effect
+            "&:hover": {
+              textShadow: "0px 0px 10px #FFF",
             },
           }}
           variant="body1"
@@ -64,23 +65,23 @@ function MagicOptions() {
       </Box>
       <BottomCard
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'column',
-          width: '100%',
-          borderRadius: '2rem',
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+          width: "100%",
+          borderRadius: "2rem",
         }}
       >
         <CardContent
           sx={{
-            display: 'flex',
-            justifyContent: 'start',
-            alignItems: 'start',
-            flexDirection: 'column',
-            borderRadius: '2rem',
+            display: "flex",
+            justifyContent: "start",
+            alignItems: "start",
+            flexDirection: "column",
+            borderRadius: "2rem",
             p: 4,
-            overflowY: 'auto',
+            overflowY: "auto",
           }}
         >
           <Typography variant="h5" mb={2} fontWeight={600}>
@@ -89,17 +90,17 @@ function MagicOptions() {
           <Box
             sx={{
               borderRadius: 2,
-              background: 'rgba(255, 255, 255, 0.10)',
+              background: "rgba(255, 255, 255, 0.10)",
               px: 4,
               py: 1.6,
-              textAlign: 'center',
+              textAlign: "center",
             }}
           >
             <Typography
               variant="body2"
               fontWeight={400}
               align="start"
-              color={'rgba(255, 255, 255, 0.80)'}
+              color={"rgba(255, 255, 255, 0.80)"}
             >
               {state?.summary}
             </Typography>
@@ -110,7 +111,7 @@ function MagicOptions() {
             </Typography>
             <List
               sx={{
-                overflowY: 'scroll',
+                overflowY: "scroll",
                 height: 240,
               }}
             >
@@ -121,8 +122,8 @@ function MagicOptions() {
                     disablePadding
                     sx={{
                       borderRadius: 2,
-                      background: 'rgba(255, 255, 255, 0.10)',
-                      textAlign: 'center',
+                      background: "rgba(255, 255, 255, 0.10)",
+                      textAlign: "center",
                       my: 1,
                     }}
                     onClick={() => handleOptionOnClick(option)}
@@ -132,12 +133,12 @@ function MagicOptions() {
                         px: 4,
                         py: 1.6,
                         borderRadius: 2,
-                        transition: 'all 0.3s ease-in-out', // Adding transition for a smooth effect
-                        '&:hover': {
+                        transition: "all 0.3s ease-in-out", // Adding transition for a smooth effect
+                        "&:hover": {
                           background:
-                            'radial-gradient(100% 100% at 50% 50%, rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.00) 100%), rgba(255, 255, 255, 0.30)',
-                          boxShadow: '0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
-                          backdropFilter: 'blur(4px)',
+                            "radial-gradient(100% 100% at 50% 50%, rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.00) 100%), rgba(255, 255, 255, 0.30)",
+                          boxShadow: "0 8px 32px 0 rgba( 31, 38, 135, 0.37 )",
+                          backdropFilter: "blur(4px)",
                         },
                       }}
                     >
@@ -146,19 +147,19 @@ function MagicOptions() {
                           sx={{
                             borderRadius: 1,
                             background:
-                              'radial-gradient(100% 100% at 50% 50%, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.00) 100%), rgba(255, 255, 255, 0.20)',
-                            height: '4rem',
-                            width: '4rem',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            fontSize: '2rem',
-                            color: 'white',
+                              "radial-gradient(100% 100% at 50% 50%, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.00) 100%), rgba(255, 255, 255, 0.20)",
+                            height: "4rem",
+                            width: "4rem",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            fontSize: "2rem",
+                            color: "white",
                             mr: 4,
                             p: 5,
                           }}
                         >
-                          {i < 9 && '0'}
+                          {i < 9 && "0"}
                           {i + 1}
                         </Box>
                       </ListItemIcon>

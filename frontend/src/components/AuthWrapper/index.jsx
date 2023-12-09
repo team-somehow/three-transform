@@ -1,10 +1,8 @@
-import React from "react";
-import { useAuth } from "@arcana/auth-react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../../config/firebase";
 
 import {
-  addDoc,
   collection,
   doc,
   getDocs,
@@ -12,13 +10,13 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
+import { AppContext } from "../../context/AppContext";
 
 function AuthWrapper({ children }) {
-  const auth = useAuth();
+  const auth = useContext(AppContext);
   const navigate = useNavigate();
 
   const [loading, setLoading] = React.useState(true);
-
   React.useEffect(() => {
     const login = async () => {
       if (auth.loading) return;

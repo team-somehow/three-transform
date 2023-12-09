@@ -1,3 +1,4 @@
+import React from "react";
 import { Box, ListItem, Typography, Divider, Button } from "@mui/material";
 import { Code, shadesOfPurple, CopyBlock } from "react-code-blocks";
 import { HashLink } from "react-router-hash-link";
@@ -9,6 +10,9 @@ import { FaReact } from "react-icons/fa";
 import { FaPython } from "react-icons/fa";
 import { useState } from "react";
 import axios from "axios";
+
+import { collection, getDoc, query, where } from "firebase/firestore";
+import { db } from "../../config/firebase";
 
 const data = [
   {
@@ -42,7 +46,7 @@ const snippets = [
     text: "Get signature and smart contract",
     code: `const provider = new providers.Web3Provider(window.ethereum);
 const signer = provider.getSigner();
-const contract = new Contract([depployed_contract_address], [contract_name].abi, signer);`,
+const contract = new Contract([deployed_contract_address], [contract_name].abi, signer);`,
   },
   {
     id: 3,
@@ -95,6 +99,18 @@ function Doc() {
         console.log(err);
       });
   };
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const q = query(
+        collection(db, "users"),
+        where("address", "==", user.address)
+      );
+      const _user = await getDoc(q);
+      console.log(_user);
+    };
+    fetchData();
+  }, []);
 
   return (
     <Box

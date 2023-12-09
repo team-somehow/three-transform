@@ -17,16 +17,14 @@ import LightButton from "../../components/LightButton";
 import YellowButton from "../../components/YellowButton";
 import { FaCode, FaDownload } from "react-icons/fa";
 import { MdArrowForwardIos } from "react-icons/md";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import { instance } from "../../config/axios";
 import { encode } from "base-64";
 import axios from "axios";
-import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
-import uuid4 from "../../helpers/id_generator";
-import { useAuth } from "@arcana/auth-react";
 import { db } from "../../config/firebase";
+import { AppContext } from "../../context/AppContext";
 const tempSteps = [
   {
     id: "01",
@@ -71,7 +69,7 @@ const tempSteps = [
 ];
 
 function EditorPage() {
-  const { user } = useAuth();
+  const { user } = useContext(AppContext);
   const { state } = useLocation();
   const [inputQuestions, setInputQuestions] = useState("");
   const [code, setCode] = useState("");
@@ -89,6 +87,7 @@ function EditorPage() {
       })
       .then((res) => {
         console.log(res);
+        console.log(state?.url);
       })
       .catch((err) => {
         console.log(err);
