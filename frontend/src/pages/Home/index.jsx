@@ -44,9 +44,13 @@ function Home() {
     try {
       // Simulate an asynchronous operation (API call, etc.)
       const { data } = await instance.post("/scrape?url=" + inputLink);
-      if (data?.response?.approaches) {
+      if (data?.response?.approaches && data.response.summary) {
         navigate("/options", {
-          state: { options: data.response.approaches },
+          state: {
+            options: data.response.approaches,
+            summary: data.response.summary,
+            url: inputLink,
+          },
         });
       }
       setLoading(false);

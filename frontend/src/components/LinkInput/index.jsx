@@ -2,12 +2,11 @@ import { Box, FormControl, InputAdornment, TextField } from "@mui/material";
 
 import { FaMagic } from "react-icons/fa";
 
-function LinkInput({ isDisabled, ...rest }) {
-  const style = {};
-
+function LinkInput({ isDisabled, defaultValue, ...rest }) {
   return (
     <FormControl fullWidth sx={{ m: 1, bgcolor: "transparent" }} {...rest}>
       <TextField
+        defaultValue={defaultValue}
         placeholder="Enter your website link here..."
         autoFocus
         disabled={isDisabled || false}

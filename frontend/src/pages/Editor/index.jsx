@@ -15,6 +15,9 @@ import { LuHardHat } from "react-icons/lu";
 import LightButton from "../../components/LightButton";
 import YellowButton from "../../components/YellowButton";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { enqueueSnackbar } from "notistack";
+import { instance } from "../../config/axios";
 
 const tempSteps = [
   {
@@ -36,12 +39,28 @@ const tempSteps = [
 ];
 
 function EditorPage() {
+  const { state } = useLocation();
+  const [inputQuestions, setInputQuestions] = useState("");
+  const [codeResponse, setCodeResponse] = useState("");
   const [tabsLayout, setTabsLayout] = useState([33, 33, 33]);
 
-  const onTabClick = (index) => {
-    setTabsLayout([4, 76, 20]);
+  const onTabClick = async () => {
+    try {
+      const response = await instance.post("generate/code", {
+        approach_heading: state?.selectedOption?.heading,
+        approach_content: state?.selectedOption?.content,
+        user_approach: inputQuestions,
+        is_test: true,
+      });
+      setCodeResponse(response?.data?.response);
+      setTabsLayout([4, 76, 20]);
+    } catch (error) {
+      enqueueSnackbar("Unable to send request", {
+        variant: "error",
+      });
+    }
   };
-
+  console.log(codeResponse);
   return (
     <Box width="96vw" height="calc(100vh - 8rem)" margin="auto">
       <Box
@@ -80,9 +99,7 @@ function EditorPage() {
                   Approach Selected
                 </Typography>
                 <Typography fontSize={16}>
-                  Use React and TypeScript to build custom tooling that unlocks
-                  teams within your organization to do their best work, at
-                  speed. Share them in your private extension store.
+                  {state?.selectedOption?.content}
                 </Typography>
               </>
             )}
@@ -104,23 +121,16 @@ function EditorPage() {
                   fontWeight="bold"
                   align="center"
                 >
-                  A few more,{" "}
-                  <Typography
-                    component="span"
-                    sx={{
-                      color: "rgba(255, 255, 255, 0.4)",
-                    }}
-                    fontSize={18}
-                    fontWeight="bold"
-                  >
-                    questions.
-                  </Typography>
+                  What features do you want your smart contract to implement?
                 </Typography>
                 <Box px={1} pt={1} height="100%">
                   <TextField
+                    placeholder="Enter here..."
                     fullWidth
                     multiline
                     minRows={9}
+                    onChange={(e) => setInputQuestions(e.target.value)}
+                    value={inputQuestions}
                     sx={{
                       height: "100%",
                     }}
@@ -178,8 +188,8 @@ function EditorPage() {
           >
             <Editor
               height="100%"
-              defaultLanguage="javascript"
-              defaultValue="console.log('Hello')"
+              defaultLanguage="solidly"
+              defaultValue={codeResponse?.code || "Loading..."}
               theme="vs-dark"
             />
           </Box>
