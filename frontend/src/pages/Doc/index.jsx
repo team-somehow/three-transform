@@ -14,6 +14,7 @@ import axios from "axios";
 import { collection, doc, getDoc, query, where } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { AppContext } from "../../context/AppContext";
+import { instance } from "../../config/axios";
 
 const data = [
   {
@@ -31,8 +32,6 @@ const data = [
     text: "Custom functions",
   },
 ];
-
-const functions = ["getName", "setName", "whoName", "weName"];
 
 const snippets = [
   {
@@ -66,20 +65,209 @@ result.wait();
   },
 ];
 
+const snippets2 = [
+  {
+    id: 1,
+    type: "react",
+    text: "Import",
+    code: `import { Contract, ethers, providers } from "ethers";`,
+  },
+  {
+    id: 2,
+    type: "react",
+    text: "Get signature and smart contract",
+    code: `const provider = new providers.Web3Provider(window.ethereum);
+const signer = provider.getSigner();
+const contract = new Contract([deployed_contract_address], [contract_name].abi, signer);`,
+  },
+  {
+    id: 3,
+    type: "react",
+    text: "Integrate the system",
+    code: `if (window.ethereum) {
+const contract = new Contract([depployed_contract_address], [contract_name].abi, signer);`,
+  },
+  {
+    id: 3,
+    type: "react",
+    text: "Integrate the system",
+    code: `if (window.ethereum) {
+await window.ethereum.enable();
+
+const result = await contract.[function_name](
+    param_1],
+    param_2]
+);
+
+result.wait();
+}`,
+  },
+];
+
+const abi = [
+  {
+    inputs: [],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "name",
+        type: "string",
+      },
+    ],
+    name: "NameSet",
+    type: "event",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_user",
+        type: "address",
+      },
+    ],
+    name: "getUserName",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "owner",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "_name",
+        type: "string",
+      },
+    ],
+    name: "setUserName",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "userNames",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+];
+
 function Doc() {
   const [toggle, setToggle] = useState("react");
-  const [selectedFunction, setSelectedFunction] = useState(functions[0]);
+  const [selectedFunction, setSelectedFunction] = useState();
+  const [functionList, setFunctionList] = useState([]);
+  const [contractAddress, setContractAddress] = useState("0x23762183687");
+  const [contractName, setContractName] = useState("MyContract");
+  const [snippets, setSnippets] = useState(snippets2);
+  const [response, setResponse] = useState(null);
   const { user } = useContext(AppContext);
+
+  React.useEffect(() => {
+    console.log(selectedFunction);
+    // if(selectedFunction){
+    let stringOfID3 = `if (window.ethereum) {
+      await window.ethereum.enable();
+      
+      const result = await contract.${selectedFunction?.name}(`;
+    for (let i = 0; i < selectedFunction?.inputs.length; i++) {
+      const keys = Object.keys(selectedFunction?.inputs[i]);
+      console.log(keys);
+      for (let j = 0; j < keys.length; j++) {
+        stringOfID3 += `${keys[j]}: ${selectedFunction?.inputs[i][keys[j]]}`;
+      }
+
+      if (i !== selectedFunction.inputs.length - 1) {
+        stringOfID3 += `,`;
+      }
+    }
+    stringOfID3 += `);`;
+    stringOfID3 += `
+      result.wait();
+    }`;
+
+    let temp = [
+      {
+        id: 1,
+        type: "react",
+        text: "Import",
+        code: `import { Contract, ethers, providers } from "ethers";`,
+      },
+      {
+        id: 2,
+        type: "react",
+        text: "Get signature and smart contract",
+        code: `const provider = new providers.Web3Provider(window.ethereum);
+const signer = provider.getSigner();
+const contract = new Contract(${contractAddress}, ${contractName}.abi, signer);`,
+      },
+      {
+        id: 3,
+        type: "react",
+        text: "Integrate the system",
+        code: stringOfID3,
+      },
+    ];
+    setSnippets(temp);
+  }, [contractAddress, contractName, selectedFunction]);
+
+  React.useEffect(() => {
+    const getData = async () => {
+      const res = await instance.post("/rest-api", {
+        abi: abi,
+      });
+      setFunctionList(res.data);
+    };
+    getData();
+  }, []);
 
   const handleArtifactDownload = async () => {
     setTimeout(() => {
-      window.open(
-        `https://gateway.lighthouse.storage/ipfs/QmafATkDSBKPdEYHajzokxfcQaTt4vz8DQa14SLV1o87Pw`,
-        "_blank",
-        "noopener,noreferrer"
-      );
+      window.open(response?.abiUrl, "_blank", "noopener,noreferrer");
     }, 5000);
-
+    return;
     axios
       .post("http://127.0.0.1:5002/getABI", {
         code: code,
@@ -106,6 +294,10 @@ function Doc() {
     const fetchData = async () => {
       const response = await getDoc(doc(db, "users", user?.address));
       console.log(response.data());
+      const { urls } = response.data();
+      console.log(urls?.abiUrl);
+      setResponse(urls);
+      setContractName(urls?.contractName);
     };
     fetchData();
   }, [user]);
@@ -261,7 +453,7 @@ function Doc() {
                       Function Names
                     </Typography>
                     <Divider sx={{ mt: 1 }} />
-                    {functions.map((funcName, index) => (
+                    {functionList?.map((funcName, index) => (
                       <ListItem
                         variant="body"
                         mt={2}
@@ -275,7 +467,7 @@ function Doc() {
                         }}
                         onClick={() => setSelectedFunction(funcName)}
                       >
-                        {`${funcName}()`}
+                        {`${funcName?.name}()`}
                       </ListItem>
                     ))}
                   </Box>

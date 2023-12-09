@@ -55,6 +55,7 @@ function AuthWrapper({ children }) {
           alignItems: 'center',
           height: '100vh',
           width: '100vw',
+          flexDirection: 'column',
         }}
       >
         <Typography variant="h6" mb={2} fontWeight={700} align="center">

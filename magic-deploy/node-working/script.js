@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const { ethers } = require("ethers");
 
@@ -6,7 +8,7 @@ const port = 3003;
 
 app.use(express.json());
 
-const privateKey = "";
+const privateKey = process.env.SECRET_KEY;
 
 app.post("/deploy-contract", async (req, res) => {
   try {

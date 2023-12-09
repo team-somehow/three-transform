@@ -94,7 +94,7 @@ function EditorPage() {
       );
       console.log(JSON.stringify(response));
       await updateDoc(doc(db, "users", user?.address), {
-        snippet: {
+        urls: {
           url: state?.url,
           abi: response?.data?.ABI,
           abiUrl: response?.data?.ABI_URI,
