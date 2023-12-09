@@ -219,7 +219,7 @@ function EditorPage() {
             <Editor
               height="100%"
               defaultLanguage="sol"
-              value={code || "Loading..."}
+              value={code || "// Code goes here"}
               theme="vs-dark"
               onChange={(value) => setCode(value)}
             />
