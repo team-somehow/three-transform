@@ -7,85 +7,85 @@ import {
   TextField,
   Typography,
   Divider,
-} from "@mui/material";
-import GradientButton from "../../components/GradientButton";
-import Editor from "@monaco-editor/react";
-import { GrDeploy } from "react-icons/gr";
-import { FaMagic } from "react-icons/fa";
-import { LuHardHat } from "react-icons/lu";
-import LightButton from "../../components/LightButton";
-import YellowButton from "../../components/YellowButton";
-import { FaCode, FaDownload } from "react-icons/fa";
-import { MdArrowForwardIos } from "react-icons/md";
-import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { enqueueSnackbar } from "notistack";
-import { instance } from "../../config/axios";
-import { encode } from "base-64";
-import axios from "axios";
-import { addDoc, collection } from "firebase/firestore";
-import uuid4 from "../../helpers/id_generator";
-import { useAuth } from "@arcana/auth-react";
-import { db } from "../../config/firebase";
+} from '@mui/material';
+import GradientButton from '../../components/GradientButton';
+import Editor from '@monaco-editor/react';
+import { GrDeploy } from 'react-icons/gr';
+import { FaMagic } from 'react-icons/fa';
+import { LuHardHat } from 'react-icons/lu';
+import LightButton from '../../components/LightButton';
+import YellowButton from '../../components/YellowButton';
+import { FaCode, FaDownload } from 'react-icons/fa';
+import { MdArrowForwardIos } from 'react-icons/md';
+import { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { enqueueSnackbar } from 'notistack';
+import { instance } from '../../config/axios';
+import { encode } from 'base-64';
+import axios from 'axios';
+import { addDoc, collection } from 'firebase/firestore';
+import uuid4 from '../../helpers/id_generator';
+import { useAuth } from '@arcana/auth-react';
+import { db } from '../../config/firebase';
 const tempSteps = [
   {
-    id: "01",
-    text: "Open Remix IDE",
+    id: '01',
+    text: 'Open Remix IDE',
   },
   {
-    id: "02",
+    id: '02',
     text: 'Click "+" in the file explorer, name the file according to contract name(e.g., Contract.sol).',
   },
   {
-    id: "03",
-    text: "Copy contract code, paste into the new file.",
+    id: '03',
+    text: 'Copy contract code, paste into the new file.',
   },
   {
-    id: "04",
+    id: '04',
     text: 'Go to "Solidity" tab, select compiler version, click "Compile".',
   },
   {
-    id: "05",
+    id: '05',
     text: 'Switch to "Deploy & Run Transactions" tab, click "Deploy".',
   },
   {
-    id: "06",
-    text: "Find deployed contract, expand, interact with functions",
+    id: '06',
+    text: 'Find deployed contract, expand, interact with functions',
   },
   {
-    id: "07",
+    id: '07',
     text: 'Deploy contract, set value using a setter function in "Deployed Contracts" with entered parameter',
   },
   {
-    id: "08",
+    id: '08',
     text: "Get value using a getter function in 'Deployed Contracts'",
   },
   {
-    id: "09",
+    id: '09',
     text: 'In "Events" section, observe emitted events.',
   },
   {
-    id: "10",
-    text: "If present, test modifiers like onlyOwner.",
+    id: '10',
+    text: 'If present, test modifiers like onlyOwner.',
   },
 ];
 
 function EditorPage() {
   const { user } = useAuth();
   const { state } = useLocation();
-  const [inputQuestions, setInputQuestions] = useState("");
-  const [code, setCode] = useState("");
-  const [summary, setSummary] = useState("");
+  const [inputQuestions, setInputQuestions] = useState('');
+  const [code, setCode] = useState('');
+  const [summary, setSummary] = useState('');
   const [tabsLayout, setTabsLayout] = useState([25, 45, 30]);
   const [isDisabled, setIsDisabled] = useState(true);
-  const [contractName, setContractName] = useState("");
+  const [contractName, setContractName] = useState('');
 
   const handleDownloadHardhat = async () => {
     axios
-      .post("http://127.0.0.1:5001/", {
+      .post('http://127.0.0.1:5001/', {
         code: code,
-        testing: "",
-        contractName: "VotingSystem",
+        testing: '',
+        contractName: 'VotingSystem',
       })
       .then((res) => {
         console.log(res);
@@ -97,16 +97,16 @@ function EditorPage() {
 
   const onTabClick = async () => {
     try {
-      const response = await instance.post("generate/code", {
+      const response = await instance.post('generate/code', {
         approach_heading: state?.selectedOption?.heading,
         approach_content: state?.selectedOption?.content,
         user_approach: inputQuestions,
         is_test: true,
       });
-      setCode("//" + response?.data?.response?.solidity_code);
+      setCode('//' + response?.data?.response?.solidity_code);
       setSummary(response?.data?.response?.details?.additional_notes);
 
-      await addDoc(collection(db, "snippets"), {
+      await addDoc(collection(db, 'snippets'), {
         approach_heading: state?.selectedOption?.heading,
         approach_content: state?.selectedOption?.content,
         user_approach: inputQuestions,
@@ -122,42 +122,42 @@ function EditorPage() {
         setIsDisabled(true);
       }
     } catch (error) {
-      enqueueSnackbar("Unable to send request", {
-        variant: "error",
+      enqueueSnackbar('Unable to send request', {
+        variant: 'error',
       });
     }
   };
 
   useEffect(() => {
-    localStorage.setItem("code", code);
-    localStorage.setItem("contractName", contractName);
+    localStorage.setItem('code', code);
+    localStorage.setItem('contractName', contractName);
   }, [code, contractName]);
 
   return (
     <Box
       sx={{
-        height: "calc(100vh - 4rem)",
-        width: "100vw",
-        padding: "1rem",
-        margin: "auto",
-        display: "flex",
+        height: 'calc(100vh - 4rem)',
+        width: '100vw',
+        padding: '1rem',
+        margin: 'auto',
+        display: 'flex',
       }}
     >
       <Box
         sx={{
           borderRadius: 2,
-          border: "1px solid rgba(255, 255, 255, 0.20)",
-          background: "linear-gradient(180deg, #2B243C 0%, #0B031E 100%)",
-          width: "100%",
-          display: "flex",
-          justifyContent: "space-evenly",
-          alignItems: "stretch",
-          height: "100%",
-          padding: "0.5rem",
+          border: '1px solid rgba(255, 255, 255, 0.20)',
+          background: 'linear-gradient(180deg, #2B243C 0%, #0B031E 100%)',
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'space-evenly',
+          alignItems: 'stretch',
+          height: '100%',
+          padding: '0.5rem',
         }}
       >
         <Box
-          width={tabsLayout[0] + "%"}
+          width={tabsLayout[0] + '%'}
           height="100%"
           display="flex"
           justifyContent="space-evenly"
@@ -167,10 +167,10 @@ function EditorPage() {
           <Box
             sx={{
               borderRadius: 1,
-              border: "1px solid #EEEEF0",
-              background: "rgba(255, 255, 255, 0.10)",
+              border: '1px solid #EEEEF0',
+              background: 'rgba(255, 255, 255, 0.10)',
               p: 2,
-              height: "100%",
+              height: '100%',
             }}
           >
             {tabsLayout[0] === 25 && (
@@ -188,9 +188,9 @@ function EditorPage() {
             sx={{
               mt: 1,
               borderRadius: 1,
-              border: "1px solid #2E3C51",
-              background: "rgba(255, 255, 255, 0.05)",
-              height: "100%",
+              border: '1px solid #2E3C51',
+              background: 'rgba(255, 255, 255, 0.05)',
+              height: '100%',
               p: 2,
             }}
           >
@@ -208,9 +208,9 @@ function EditorPage() {
                     onChange={(e) => setInputQuestions(e.target.value)}
                     value={inputQuestions}
                     sx={{
-                      height: "100%",
-                      overflow: "auto",
-                      background: "rgba(255, 255, 255, 0.10)",
+                      height: '100%',
+                      overflow: 'auto',
+                      background: 'rgba(255, 255, 255, 0.10)',
                       borderRadius: 1,
                     }}
                   />
@@ -255,13 +255,13 @@ function EditorPage() {
                 #c729b9 331.67617321014404deg
               )
             )`,
-                  boxShadow: "0px 0px 60px 0px rgba(236, 39, 182, 0.6)",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: "1rem",
-                  width: "100%",
-                  height: "100%",
+                  boxShadow: '0px 0px 60px 0px rgba(236, 39, 182, 0.6)',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  padding: '1rem',
+                  width: '100%',
+                  height: '100%',
                   // add on hover
                 }}
               >
@@ -274,11 +274,11 @@ function EditorPage() {
           orientation="vertical"
           sx={{
             ml: 1,
-            bgcolor: "white",
+            bgcolor: 'white',
           }}
         />
         <Box
-          width={tabsLayout[1] + "%"}
+          width={tabsLayout[1] + '%'}
           height="100%"
           display="flex"
           justifyContent="center"
@@ -290,17 +290,17 @@ function EditorPage() {
             sx={{
               flex: 1,
               borderRadius: 1,
-              border: "1px solid #EEEEF0",
-              background: "#1D172B",
+              border: '1px solid #EEEEF0',
+              background: '#1D172B',
               mb: 1,
-              height: "100%",
-              overflow: "hidden",
+              height: '100%',
+              overflow: 'hidden',
             }}
           >
             <Editor
               height="100%"
               defaultLanguage="sol"
-              value={code || "// Code goes here"}
+              value={code || '// Code goes here'}
               theme="vs-dark"
               onChange={(value) => setCode(value)}
             />
@@ -313,19 +313,16 @@ function EditorPage() {
               gap: 1,
             }}
           >
-            <GradientButton
-              icon={<GrDeploy />}
-              text="Magic Deploy"
+            <YellowButton
+              text="Download Hardhat"
               fullWidth
-              isDisabled={isDisabled}
-              styles={{
-                borderRadius: 1,
-              }}
-            />{" "}
+              icon={<LuHardHat color="black" />}
+              onClick={() => handleDownloadHardhat()}
+            />
           </Box>
         </Box>
         <Box
-          width={tabsLayout[2] + "%"}
+          width={tabsLayout[2] + '%'}
           display="flex"
           justifyContent="center"
           alignItems="stretch"
@@ -335,12 +332,12 @@ function EditorPage() {
           <Box
             sx={{
               borderRadius: 1,
-              border: "1px solid #2E3C51",
-              background: "rgba(255, 255, 255, 0.05)",
-              height: "25rem",
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
+              border: '1px solid #2E3C51',
+              background: 'rgba(255, 255, 255, 0.05)',
+              height: '25rem',
+              display: 'flex',
+              alignItems: 'center',
+              flexDirection: 'column',
               pt: 2,
             }}
           >
@@ -359,8 +356,8 @@ function EditorPage() {
                 activeStep={-1}
                 orientation="vertical"
                 sx={{
-                  color: "white",
-                  overflow: "auto",
+                  color: 'white',
+                  overflow: 'auto',
                 }}
               >
                 {tempSteps.map(({ id, text }) => {
@@ -389,11 +386,11 @@ function EditorPage() {
             my={1}
             sx={{
               borderRadius: 1,
-              border: "1px solid #EEEEF0",
-              background: "rgba(255, 255, 255, 0.10)",
+              border: '1px solid #EEEEF0',
+              background: 'rgba(255, 255, 255, 0.10)',
               p: 2,
-              height: "calc(100% - 30rem)",
-              overflow: "auto",
+              height: 'calc(100% - 20rem)',
+              overflow: 'auto',
             }}
           >
             <Typography fontSize={18} fontWeight="600">
@@ -401,28 +398,15 @@ function EditorPage() {
             </Typography>
             <Typography fontSize={13}>{summary}</Typography>
           </Box>
-          <Button
-            startIcon={<FaDownload />}
-            variant="outlined"
-            sx={{
-              borderRadius: 0.5,
-              border: "1px solid #2E3C51",
-              color: "white",
-              transition: "0.3s ease-in", // Add a smooth transition effect
-              "&:hover": {
-                border: "1px solid #2E3C51",
-                color: "red",
-              },
-              mb: 1,
-            }}
-          >
-            Download ABI
-          </Button>
-          <YellowButton
-            text="Download Hardhat"
+          <GradientButton
+            icon={<GrDeploy />}
+            text="Magic Deploy"
             fullWidth
-            icon={<LuHardHat color="black" />}
-            onClick={() => handleDownloadHardhat()}
+            isDisabled={isDisabled}
+            styles={{
+              borderRadius: 1,
+              height: '2.5rem',
+            }}
           />
         </Box>
       </Box>
