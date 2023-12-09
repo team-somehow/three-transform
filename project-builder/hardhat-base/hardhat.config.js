@@ -10,10 +10,10 @@ module.exports = {
   networks: {
     mumbai: {
       url: "https://polygon-testnet.public.blastapi.io",
-      accounts: [`0x${MATIC_PRIVATE_KEY}`],
+      account: [`0x${MATIC_PRIVATE_KEY}`],
     },
   },
   paths: {
-    artifacts: "../frontend/src/artifacts",
+    artifacts: "artifacts",
   },
 };
