@@ -13,6 +13,9 @@ function YellowButton({ text, icon, ...rest }) {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        "&:hover": {
+          background: "#F5DC22",
+        },
       }}
       variant="contained"
       {...rest}
