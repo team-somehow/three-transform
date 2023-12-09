@@ -163,6 +163,9 @@ function EditorPage() {
           justifyContent="space-evenly"
           alignItems="stretch"
           flexDirection="column"
+          sx={{
+            transition: 'all 0.3s ease',
+          }}
         >
           <Box
             sx={{
@@ -285,6 +288,9 @@ function EditorPage() {
           alignItems="stretch"
           flexDirection="column"
           px={1}
+          sx={{
+            transition: 'all 0.3s ease',
+          }}
         >
           <Box
             sx={{
@@ -328,6 +334,7 @@ function EditorPage() {
           alignItems="stretch"
           flexDirection="column"
           height="100%"
+          
         >
           <Box
             sx={{
