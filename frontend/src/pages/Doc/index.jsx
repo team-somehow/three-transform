@@ -214,7 +214,6 @@ function Doc() {
       const result = await contract.${selectedFunction?.name}(`;
     for (let i = 0; i < selectedFunction?.inputs.length; i++) {
       const keys = Object.keys(selectedFunction?.inputs[i]);
-      console.log(keys);
       for (let j = 0; j < keys.length; j++) {
         stringOfID3 += `${keys[j]}: ${selectedFunction?.inputs[i][keys[j]]}`;
       }
@@ -255,13 +254,14 @@ const contract = new Contract(${contractAddress}, ${contractName}.abi, signer);`
 
   React.useEffect(() => {
     const getData = async () => {
+      console.log(response.abi.abi)
       const res = await instance.post("/rest-api", {
-        abi: abi,
+        abi: response.abi.abi,
       });
       setFunctionList(res.data);
     };
     getData();
-  }, []);
+  }, [response]);
 
   const handleArtifactDownload = async () => {
     setTimeout(() => {
@@ -295,9 +295,9 @@ const contract = new Contract(${contractAddress}, ${contractName}.abi, signer);`
       const response = await getDoc(doc(db, "users", user?.address));
       console.log(response.data());
       const { urls } = response.data();
-      console.log(urls?.abiUrl);
       setResponse(urls);
       setContractName(urls?.contractName);
+      setContractAddress(urls?.contractAddress);
     };
     fetchData();
   }, [user]);
