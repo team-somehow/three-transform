@@ -45,6 +45,7 @@ def generate_code():
         1. Compiles without errors.
         2. Is complete and ready for deployment.
         3. The version of Solidity used is "0.8.0" and SPDX-License-Identifier should be "MIT".
+        4. Create a 'transferTo' function in a smart contract that allows the owner to transfer ownership to a specified address. Only the current owner should have the privilege to invoke this function.
 
         Note: Consider best practices and security considerations for smart contracts during the development.
     """
@@ -68,19 +69,15 @@ def generate_code():
                 "properties": {
                     "compilation_status_confidence": {
                         "type": "integer",
-                        "minimum": 1,
-                        "maximum": 100,
                         "description": "Confidence level (between 1 and 100 - 1 being least confident that it will compile successfully and 100 being completely sure that it will compile successfully) for the compilation status of the generated Solidity code.",
                     },
                     "completeness_confidence": {
                         "type": "integer",
-                        "minimum": 1,
-                        "maximum": 100,
                         "description": "Confidence level (between 1 and 100 - 1 being least confident that it will compile successfully and 100 being completely sure that it will compile successfully) for the completeness of the generated Solidity code.",
                     },
                     "additional_notes": {
                         "type": "string",
-                        "description": "Any additional notes or comments related to the generated Solidity code.",
+                        "description": "Describe all the functions of the smart contract except the 'transferTo' function. Provide a brief description of the contract's functionality and any other relevant details",
                     },
                 },
                 "required": ["compilation_status_confidence", "completeness_confidence"],
@@ -279,12 +276,12 @@ web_scrape_flipkart_website_response = {
 
 generate_code_test_response = {
     "response": {
-        "contract_name": "VotingSystem",
+        "contract_name": "RedditVoting",
         "details": {
-            "additional_notes": "The VotingSystem contract allows upvoting and downvoting of posts or comments on the blockchain. The upvote and downvote functions ensure that a user can only upvote or downvote each post/comment once. The contract emits a Voted event whenever a vote is cast. The getVote function enables querying a user's vote for a specific post/comment.",
+            "additional_notes": "This smart contract enables upvoting and downvoting of posts in a Reddit-like platform. All votes are stored on the Ethereum blockchain to ensure transparency. A post's unique hash is used as the key to record votes. The constructor sets the contract deployer as the initial owner. The contract includes an 'onlyOwner' modifier to restrict certain operations to the owner address. A 'transferTo' function allows the owner to transfer ownership to another Ethereum address. Note: the contract does not include any logic to authenticate users beyond their Ethereum address. Therefore, any Ethereum account can interact with the contract and cast votes.",
             "compilation_status_confidence": 1,
             "completeness_confidence": 1
         },
-        "solidity_code": "pragma solidity ^0.8.0;\n\n// SPDX-License-Identifier: MIT\n\ncontract VotingSystem {\n    \n    // Mapping to store votes of users. Mapping postId/commentId to user address to vote.\n    // Note: Vote is modelled as an integer, +1 indicates upvote, -1 indicates downvote and 0 indicates no vote.\n    mapping (uint => mapping(address => int)) private votes;\n    \n    // Event to log when a vote is casted.\n    event Voted(uint postId, address voter, int vote);\n    \n    // Function to upvote a post/comment.\n    function upvote(uint _postId) public {\n        require(votes[_postId][msg.sender] != 1, 'You have already upvoted this post/comment.');\n        votes[_postId][msg.sender] = 1;\n        emit Voted(_postId, msg.sender, 1);\n    }\n    \n    // Function to downvote a post/comment.\n    function downvote(uint _postId) public {\n        require(votes[_postId][msg.sender] != -1, 'You have already downvoted this post/comment.');\n        votes[_postId][msg.sender] = -1;\n        emit Voted(_postId, msg.sender, -1);\n    }\n    \n    // Function to get the vote of a user for a particular post/comment.\n    function getVote(uint _postId, address _voter) public view returns(int) {\n        return votes[_postId][_voter];\n    }\n}\n"
+        "solidity_code": "--SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\ncontract RedditVoting {\n\n    address public owner;\n    mapping(address => mapping(bytes32 => bool)) public upvotes;\n    mapping(address => mapping(bytes32 => bool)) public downvotes;\n    mapping(bytes32 => uint256) public score;\n\n    constructor() {\n        owner = msg.sender;\n    }\n\n    modifier onlyOwner() {\n        require(msg.sender == owner, \"Only owner can call this function.\");\n        _;\n    }\n\n    function upvote(bytes32 _hash) public {\n        require(!downvotes[msg.sender][_hash], \"Cannot upvote a downvoted post.\");\n        upvotes[msg.sender][_hash] = true;\n        score[_hash]++;\n    }\n\n    function downvote(bytes32 _hash) public {\n        require(!upvotes[msg.sender][_hash], \"Cannot downvote an upvoted post.\");\n        downvotes[msg.sender][_hash] = true;\n        score[_hash]--;\n    }\n\n    function getPostScore(bytes32 _hash) public view returns (uint256) {\n        return score[_hash];\n    }\n\n    function transferTo(address newOwner) public onlyOwner {\n        owner = newOwner;\n    }\n}"
     }
 }
