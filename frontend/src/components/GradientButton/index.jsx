@@ -1,10 +1,11 @@
 import { Button } from '@mui/material';
 
-function GradientButton({ icon, text, ...rest }) {
+function GradientButton({ icon, text, styles, isDisabled, ...rest }) {
   return (
     <Button
       startIcon={icon || null}
       disableElevation
+      disabled={isDisabled}
       sx={{
         borderRadius: 6,
         background: `var(--brand-mix, conic-gradient(
@@ -26,11 +27,15 @@ function GradientButton({ icon, text, ...rest }) {
       #c729b9 331.67617321014404deg
     )
   )`,
-        boxShadow: '0px 0px 60px 0px rgba(236, 39, 182, 0.6)',
+        boxShadow: '0px 0px 30px 0px rgba(236, 39, 182, 0.6)',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         padding: '0.75rem 2rem',
+        '&:hover': {
+          boxShadow: '0px 0px 50px 0px rgba(236, 39, 182, 0.6)',
+        },
+        ...styles,
       }}
       variant="contained"
       {...rest}
