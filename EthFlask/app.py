@@ -67,6 +67,10 @@ def generate_code():
                 "type": "string",
                 "description": "Generated Solidity code for the specified approach.",
             },
+            "contract_name": {
+                "type": "string",
+                "description": "Name of the smart contract generated for the specified approach.",
+            },
             "details": {
                 "type": "object",
                 "properties": {
@@ -74,13 +78,13 @@ def generate_code():
                         "type": "integer",
                         "minimum": 1,
                         "maximum": 100,
-                        "description": "Confidence level (between 1 and 100) for the compilation status of the generated Solidity code.",
+                        "description": "Confidence level (between 1 and 100 - 1 being least confident that it will compile successfully and 100 being completely sure that it will compile successfully) for the compilation status of the generated Solidity code.",
                     },
                     "completeness_confidence": {
                         "type": "integer",
                         "minimum": 1,
                         "maximum": 100,
-                        "description": "Confidence level (between 1 and 100) for the completeness of the generated Solidity code.",
+                        "description": "Confidence level (between 1 and 100 - 1 being least confident that it will compile successfully and 100 being completely sure that it will compile successfully) for the completeness of the generated Solidity code.",
                     },
                     "additional_notes": {
                         "type": "string",
@@ -91,7 +95,7 @@ def generate_code():
                 "description": "Details about the generated Solidity code.",
             },
         },
-        "required": ["solidity_code", "details"],
+        "required": ["solidity_code", "contract_name", "details"],
         "description": "Schema for representing the generated Solidity code and related details.",
     }
 
@@ -111,60 +115,19 @@ def web_scrape():
     website_url = request.args.get('url')
 
     ############################################
-    if website_url == "https://flipkart.com/":
-        response = {
-            "response": {
-                "approaches": [
-                    {
-                        "content": "One immediate approach would be integrating a smart contract for secure and reliable payment. In addition to the current payment gateways, a smart contract will enable direct transfers of cryptocurrency between buyers and sellers. This will increase transparency and may reduce possible transaction costs.",
-                        "heading": "Smart Contract for Secure Payments",
-                        "relevence": "In e-commerce, trust and security during transactions is a critical component. Using smart contracts could enhance this by offering a transparent and secure system for both customers and sellers."
-                    },
-                    {
-                        "content": "Another approach could involve using non-fungible tokens (NFTs) to ensure the authenticity of products, particularly high-value items. Each product could be minted as an NFT representing a unique digital certificate of authenticity. Upon purchasing, this NFT could be sent to the buyer's digital wallet, guaranteeing the authenticity of the product.",
-                        "heading": "Product Authenticity Verification using NFTs",
-                        "relevence": "Counterfeiting is a significant challenge in e-commerce. By integrating NFTs for high-value items, customers are assured of the authenticity of their purchases."
-                    },
-                    {
-                        "content": "Integrate smart contracts for dispute resolutions. The contract could have conditions that govern refunds and return policies. In case of a dispute, the smart contract can be enacted based upon the laid out conditions, ensuring fairness and transparency.",
-                        "heading": "Smart Contract for Dispute Resolution",
-                        "relevence": "Dealing with disputes is often a complex and time-consuming process in e-commerce. A smart contract automatically executing based on pre-determined conditions can expedite this process."
-                    }
-                ],
-                "summary": "Flipkart is an Indian e-commerce company that deals with selling goods online. Its core business proposition includes products from numerous categories, such as fashion, home essentials, electronics, etc. It offers secure digital payment options and follows a business model of inventory-led direct sales as well as a hybrid model where it provides a platform for other sellers to sell their products."
-            }
-        }
-        return jsonify(response)
-    
-    if website_url == "https://www.reddit.com/" or "reddit" in website_url:
-        response = {
-            "response": {
-                "approaches": [
-                    {
-                        "content": "Smart contracts can be used to implement a token system within the community. This would give digital assets a value that could be earned by the community participants based on their contributions. This can be achieved by deploying a smart contract that governs the token dynamics like issue, transfer, and burn.",
-                        "heading": "Implementing Token Systems",
-                        "relevence": "On Reddit, users' activity along with its influence and contributions to the community can be quantified and incentivized. By applying token systems, user engagement can be taken to a new level. This could increase the interaction and the quality of content, providing an improved user experience."
-                    },
-                    {
-                        "content": "Smart contracts can be used to verify the authenticity and integrity of the content posted. A unique signature to each post can be added and that signature can be stored on the blockchain. Any changes made to the content will result in a change in the signature, ensuring the content remains unchanged and authentic.",
-                        "heading": "Content Verification",
-                        "relevence": "Reddit is an information sharing platform and ensuring the authenticity of the information becomes vital. However, editing a post currently might give rise to disputes regarding the original content. This approach can preserve the integrity of the original posts and avoid disputes."
-                    },
-                    {
-                        "content": "Reddit's upvote/downvote system can be made even more transparent and tamper-proof using blockchain smart contracts. Votes can be stored as transactions, providing a transparent and immutable track of votes. This can also ensure that a single user cannot influence the overall votes excessively.",
-                        "heading": "Voting System",
-                        "relevence": "Upvoting and downvoting are essential components of Reddit to decide the popularity of a post. By using a smart contract to handle votes, it's even more secure and transparent which will encourage fair play in the community."
-                    },
-                    {
-                        "content": "Advertising on Reddit can be made more efficient and transparent by using smart contracts to handle the advertisement transactions. Advertisers could use tokens to pay for their advertisements and viewers could be incentivised for watching advertisements.",
-                        "heading": "Advertisement Management",
-                        "relevence": "This not only provides a seamless ad experience but also ensures a fair view count, making the advertisement aspect of Reddit more robust and reliable."
-                    }
-                ],
-                "summary": "Reddit is a network of communities where individuals can find experiences built around their interests, hobbies, and passions. Users can post, vote, and comment in communities organized around their interests. Reddit's vast network includes communities covering a large range of topics, including various aspects of technology, politics, science, sports, entertainment, and more."
-            }
-        }
-        return jsonify(response)
+    is_test = request.args.get('is_test', None)
+    if is_test == "true":
+        if website_url == "https://flipkart.com/" or "flipkart" in website_url:
+            response = web_scrape_flipkart_website_response
+            return jsonify(response)
+        
+        if website_url == "https://www.reddit.com/" or "reddit" in website_url:
+            response = web_scrape_reddit_website_respose
+            return jsonify(response)
+        
+        else:
+            response = web_scrape_reddit_website_respose
+            return jsonify(response)
     ############################################
     
     # actual code
@@ -179,14 +142,13 @@ def web_scrape():
             2) If it is a well-known app DO NOT answer as it is not possible. Understand that the developer is building a similar version on web3.
         
         For example :- 
-            If the app's core functionality is to sell properties online so an "approach" would be :-
+        (1) If the app's core functionality is to sell properties online so an "approach" would be :-
             1) use escrow smart contract to transfer property
             2) use NFT to represent property
+        (2) If the app is reddit so an "approach" would be :-
+            1) Reddit's upvote/downvote system can be made even more transparent and tamper-proof using blockchain smart contracts.
     """
     prompt = prompt.format(website_url, website_url)
-
-    # print(prompt)
-    # return jsonify({"response":prompt})
 
     schema = {
         "type": "object",
@@ -271,3 +233,54 @@ def RESTAPI():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+web_scrape_reddit_website_respose = {
+    "response": {
+        "approaches": [
+            {
+                "content": "Smart contracts can make Reddit's upvoting and downvoting system more transparent and tamper-proof. Users can vote on posts and comments, and these votes can be recorded on the blockchain. This ensures that the voting process is clear, transparent, and cannot be tampered with. Manipulated votes are a concern that can be tackled using smart contracts.",
+                "heading": "Decentralized Voting System",
+                "relevence": "Reddit heavily relies on its upvote and downvote system to rank content and decide what gets seen by more people. Ensuring this system's legitimacy adds value to the platform."
+            },
+            {
+                "content": "Reddit currently has a karma system where users gain points for their comments and posts, which are upvoted by other users. This concept can be implemented via smart contracts to create Karma Tokens. Users can earn or lose tokens based on their contributions. The tokens can hold real value, and users could trade them for goods, services, or even sell them for cryptocurrency.",
+                "heading": "Tokenization of Karma Points",
+                "relevence": "The ability to earn karma is a key engagement factor in Reddit. Tokenizing karma points may drive stronger user engagement and facilitate an economy within Reddit itself."
+            },
+            {
+                "content": "Content posted on Reddit can be stored on the blockchain, ensuring it is immutable and persistent. This use of a smart contract can mean that once a post is made, it cannot be altered or deleted. This ensures the authenticity of the content.",
+                "heading": "Decentralized & Immutable Content",
+                "relevence": "Amid increasingly common concerns about censorship and content manipulation on social platforms, this feature can give Reddit a competitive edge."
+            },
+            {
+                "content": "Smart contracts can enhance Reddit's advertising system. Advertisers can directly enter into contracts with the platform using smart contracts. They can pay using digital tokens, and the display of ads can be automatically controlled by the contract. This would make the transaction process more efficient and trustable.",
+                "heading": "Smart Contract-based Ads",
+                "relevence": "Advertising is a significant source of revenue for Reddit. Using smart contracts to automate and make the process more transparent could improve advertiser trust and satisfaction."
+            }
+        ],
+        "summary": "Reddit is a network of communities where people can dive into their interests, hobbies and passions. It's a platform for users to post, comment, and vote on content. Reddit has many subreddits for various topics, and users can subscribe to these subreddits to receive updates on their front page. Users can also upvote and downvote posts and comment on them."
+    }
+}
+
+web_scrape_flipkart_website_response = {
+            "response": {
+                "approaches": [
+                    {
+                        "content": "One immediate approach would be integrating a smart contract for secure and reliable payment. In addition to the current payment gateways, a smart contract will enable direct transfers of cryptocurrency between buyers and sellers. This will increase transparency and may reduce possible transaction costs.",
+                        "heading": "Smart Contract for Secure Payments",
+                        "relevence": "In e-commerce, trust and security during transactions is a critical component. Using smart contracts could enhance this by offering a transparent and secure system for both customers and sellers."
+                    },
+                    {
+                        "content": "Another approach could involve using non-fungible tokens (NFTs) to ensure the authenticity of products, particularly high-value items. Each product could be minted as an NFT representing a unique digital certificate of authenticity. Upon purchasing, this NFT could be sent to the buyer's digital wallet, guaranteeing the authenticity of the product.",
+                        "heading": "Product Authenticity Verification using NFTs",
+                        "relevence": "Counterfeiting is a significant challenge in e-commerce. By integrating NFTs for high-value items, customers are assured of the authenticity of their purchases."
+                    },
+                    {
+                        "content": "Integrate smart contracts for dispute resolutions. The contract could have conditions that govern refunds and return policies. In case of a dispute, the smart contract can be enacted based upon the laid out conditions, ensuring fairness and transparency.",
+                        "heading": "Smart Contract for Dispute Resolution",
+                        "relevence": "Dealing with disputes is often a complex and time-consuming process in e-commerce. A smart contract automatically executing based on pre-determined conditions can expedite this process."
+                    }
+                ],
+                "summary": "Flipkart is an Indian e-commerce company that deals with selling goods online. Its core business proposition includes products from numerous categories, such as fashion, home essentials, electronics, etc. It offers secure digital payment options and follows a business model of inventory-led direct sales as well as a hybrid model where it provides a platform for other sellers to sell their products."
+            }
+        }
