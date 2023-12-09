@@ -1,24 +1,25 @@
-import { Outlet, createBrowserRouter } from "react-router-dom";
-import { Box } from "@mui/material";
-import NotFound from "../pages/NotFound";
-import Home from "../pages/Home";
-import Navbar from "../components/Navbar";
-import Editor from "../pages/Editor";
-import Doc from "../pages/Doc";
-import MagicOptions from "../pages/MagicOptions";
-import Login from "../pages/Login";
-import AuthWrapper from "../components/AuthWrapper";
-import GoogleLogin from "../pages/GoogleLogin";
+import { Outlet, createBrowserRouter } from 'react-router-dom';
+import { Box } from '@mui/material';
+import NotFound from '../pages/NotFound';
+import Home from '../pages/Home';
+import Navbar from '../components/Navbar';
+import Editor from '../pages/Editor';
+import Doc from '../pages/Doc';
+import MagicOptions from '../pages/MagicOptions';
+import Login from '../pages/Login';
+import AuthWrapper from '../components/AuthWrapper';
+import GoogleLogin from '../pages/GoogleLogin';
+import Modal from '../components/Modal';
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: (
       <AuthWrapper>
         <Box
           sx={{
-            height: "100%",
-            width: "100%",
+            height: '100%',
+            width: '100%',
           }}
         >
           <Navbar />
@@ -28,33 +29,37 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "/",
+        path: '/',
         element: <Home />,
       },
       {
-        path: "editor",
+        path: 'editor',
         element: <Editor />,
       },
       {
-        path: "doc",
+        path: 'doc',
         element: <Doc />,
       },
       {
-        path: "options",
+        path: 'options',
         element: <MagicOptions />,
       },
     ],
   },
   {
-    path: "/login",
+    path: '/login',
     element: <Login />,
   },
   {
-    path: "/google-login",
+    path: '/google-login',
     element: <GoogleLogin />,
   },
   {
-    path: "*",
+    path: '/modal',
+    element: <Modal />,
+  },
+  {
+    path: '*',
     element: <NotFound />,
   },
 ]);

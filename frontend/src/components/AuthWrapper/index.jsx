@@ -1,6 +1,7 @@
-import React, { useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { db } from "../../config/firebase";
+import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { db } from '../../config/firebase';
+import { LinearProgress, Box, Typography } from '@mui/material';
 
 import {
   collection,
@@ -9,8 +10,8 @@ import {
   query,
   setDoc,
   where,
-} from "firebase/firestore";
-import { AppContext } from "../../context/AppContext";
+} from 'firebase/firestore';
+import { AppContext } from '../../context/AppContext';
 
 function AuthWrapper({ children }) {
   const auth = useContext(AppContext);
@@ -26,12 +27,12 @@ function AuthWrapper({ children }) {
 
           const { user } = auth || {};
           const q = query(
-            collection(db, "users"),
-            where("address", "==", user.address)
+            collection(db, 'users'),
+            where('address', '==', user.address)
           );
           const docs = await getDocs(q);
           if (docs.docs.length === 0) {
-            await setDoc(doc(db, "users", user?.address), {
+            await setDoc(doc(db, 'users', user?.address), {
               uid: user.address,
               name: user.name,
               authProvider: user?.authProvider,
@@ -45,7 +46,23 @@ function AuthWrapper({ children }) {
     login();
   }, [auth, navigate]);
 
-  if (loading) return <>Loading...</>;
+  if (loading)
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          width: '100vw',
+        }}
+      >
+        <Typography variant="h6" mb={2} fontWeight={700} align="center">
+          Preparing magic dust...
+        </Typography>
+        <LinearProgress sx={{ width: '30%', borderRadius: '1rem', mt: 2 }} />
+      </Box>
+    );
   return <>{children}</>;
 }
 
