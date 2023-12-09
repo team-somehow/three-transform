@@ -44,6 +44,7 @@ def generate_code():
         Ensure that the generated Solidity code:
         1. Compiles without errors.
         2. Is complete and ready for deployment.
+        3. The version of Solidity used is "0.8.0" and SPDX-License-Identifier should be "MIT".
 
         Note: Consider best practices and security considerations for smart contracts during the development.
     """
@@ -278,12 +279,12 @@ web_scrape_flipkart_website_response = {
 
 generate_code_test_response = {
     "response": {
-        "contract_name": "RedditVotingSystem",
+        "contract_name": "VotingSystem",
         "details": {
-            "additional_notes": "This contract includes all the functions for a basic voting system. Users can create posts or comments and then upvote or downvote them. There's a function to check the total number of votes on a specific post or comment, and a function check what vote a specific user gave to a post or comment.",
+            "additional_notes": "The VotingSystem contract allows upvoting and downvoting of posts or comments on the blockchain. The upvote and downvote functions ensure that a user can only upvote or downvote each post/comment once. The contract emits a Voted event whenever a vote is cast. The getVote function enables querying a user's vote for a specific post/comment.",
             "compilation_status_confidence": 1,
             "completeness_confidence": 1
         },
-        "solidity_code": "\npragma solidity ^0.5.0;\n\ncontract RedditVotingSystem{\n\n    struct Vote {\n        address voter;\n        bool choice;\n    }\n    \n    struct PostOrComment {\n        uint voteCount;\n        mapping(address => Vote) votes;\n    }\n    \n    mapping(uint => PostOrComment) public postsOrComments;\n    uint public totalPostsOrComments;\n    \n    function createPostOrComment() public returns (uint) {\n        totalPostsOrComments ++;\n        PostOrComment storage pc = postsOrComments[totalPostsOrComments];\n        pc.voteCount = 0;\n        return totalPostsOrComments;\n    }\n    \n    function upVote(uint _postOrCommentId) public {\n        PostOrComment storage pc = postsOrComments[_postOrCommentId];\n        \n        require(pc.votes[msg.sender].voter != msg.sender, 'User has already voted');\n        \n        pc.votes[msg.sender].choice = true;\n        pc.votes[msg.sender].voter = msg.sender;\n        pc.voteCount += 1;\n    }\n    \n    function downVote(uint _postOrCommentId) public {\n        PostOrComment storage pc = postsOrComments[_postOrCommentId];\n        \n        require(pc.votes[msg.sender].voter != msg.sender, 'User has already voted');\n        \n        pc.votes[msg.sender].choice = false;\n        pc.votes[msg.sender].voter = msg.sender;\n        pc.voteCount -= 1;\n    }\n    \n    function checkVote(uint _postOrCommentId, address _user) public view returns(bool){\n        PostOrComment storage pc = postsOrComments[_postOrCommentId];\n        return pc.votes[_user].choice;\n    }\n    \n    function checkTotalVotes(uint _postOrCommentId) public view returns(uint) {\n        PostOrComment storage pc = postsOrComments[_postOrCommentId];\n        return pc.voteCount;\n    }\n}\n"
+        "solidity_code": "pragma solidity ^0.8.0;\n\n// SPDX-License-Identifier: MIT\n\ncontract VotingSystem {\n    \n    // Mapping to store votes of users. Mapping postId/commentId to user address to vote.\n    // Note: Vote is modelled as an integer, +1 indicates upvote, -1 indicates downvote and 0 indicates no vote.\n    mapping (uint => mapping(address => int)) private votes;\n    \n    // Event to log when a vote is casted.\n    event Voted(uint postId, address voter, int vote);\n    \n    // Function to upvote a post/comment.\n    function upvote(uint _postId) public {\n        require(votes[_postId][msg.sender] != 1, 'You have already upvoted this post/comment.');\n        votes[_postId][msg.sender] = 1;\n        emit Voted(_postId, msg.sender, 1);\n    }\n    \n    // Function to downvote a post/comment.\n    function downvote(uint _postId) public {\n        require(votes[_postId][msg.sender] != -1, 'You have already downvoted this post/comment.');\n        votes[_postId][msg.sender] = -1;\n        emit Voted(_postId, msg.sender, -1);\n    }\n    \n    // Function to get the vote of a user for a particular post/comment.\n    function getVote(uint _postId, address _voter) public view returns(int) {\n        return votes[_postId][_voter];\n    }\n}\n"
     }
 }
