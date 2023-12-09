@@ -18,17 +18,8 @@ client=OpenAI(api_key=gpt_api_key)
 @app.route('/generate/code',methods=['GET',"POST"])
 def generate_code():
     is_test = request.get_json().get('is_test', None)
-    if is_test:
-        response = {
-            "response": {
-                "details": {
-                    "additional_notes": "This contract creates a voting system, where each post can be upvoted or downvoted. Votes are stored in a mapping to prevent double voting.",
-                    "compilation_status_confidence": 1.0,
-                    "completeness_confidence": 1.0
-                },
-                "solidity_code": """pragma solidity ^0.8.4; \n\n contract VotingSystem {\n\n struct Post {\n  uint id;\n  uint votes;\n  address poster;\n }\n\n Post[] public posts;\n\n mapping(address => mapping(uint => bool)) public votes;\n\n function createPost() public {\n  uint id = posts.length + 1;\n  posts.push(Post(id, 0, msg.sender));\n }\n\n function upvote(uint id) public {\n  require(!votes[msg.sender][id]);\n  votes[msg.sender][id] = true;\n  posts[id-1].votes++;\n }\n\n function downvote(uint id) public {\n  require(votes[msg.sender][id]);\n  votes[msg.sender][id] = false;\n  posts[id-1].votes--;\n }\n\n}"""
-            }
-        }
+    if is_test == True:
+        response = generate_code_test_response
         return jsonify(response)
 
     # return jsonify({"response":request.get_json()})
@@ -108,7 +99,7 @@ def generate_code():
         function_call={"name": "print"},
     )
     print(response.choices[0].message.function_call.arguments)
-    return jsonify({"response":json.loads(response.choices[0].message.function_call.arguments)})
+    return jsonify({"response":json.loads(response.choices[0].message.function_call.arguments, strict=False)})
 
 @app.route('/scrape',methods=['GET',"POST"])
 def web_scrape():
@@ -284,3 +275,15 @@ web_scrape_flipkart_website_response = {
                 "summary": "Flipkart is an Indian e-commerce company that deals with selling goods online. Its core business proposition includes products from numerous categories, such as fashion, home essentials, electronics, etc. It offers secure digital payment options and follows a business model of inventory-led direct sales as well as a hybrid model where it provides a platform for other sellers to sell their products."
             }
         }
+
+generate_code_test_response = {
+    "response": {
+        "contract_name": "RedditVotingSystem",
+        "details": {
+            "additional_notes": "This contract includes all the functions for a basic voting system. Users can create posts or comments and then upvote or downvote them. There's a function to check the total number of votes on a specific post or comment, and a function check what vote a specific user gave to a post or comment.",
+            "compilation_status_confidence": 1,
+            "completeness_confidence": 1
+        },
+        "solidity_code": "\npragma solidity ^0.5.0;\n\ncontract RedditVotingSystem{\n\n    struct Vote {\n        address voter;\n        bool choice;\n    }\n    \n    struct PostOrComment {\n        uint voteCount;\n        mapping(address => Vote) votes;\n    }\n    \n    mapping(uint => PostOrComment) public postsOrComments;\n    uint public totalPostsOrComments;\n    \n    function createPostOrComment() public returns (uint) {\n        totalPostsOrComments ++;\n        PostOrComment storage pc = postsOrComments[totalPostsOrComments];\n        pc.voteCount = 0;\n        return totalPostsOrComments;\n    }\n    \n    function upVote(uint _postOrCommentId) public {\n        PostOrComment storage pc = postsOrComments[_postOrCommentId];\n        \n        require(pc.votes[msg.sender].voter != msg.sender, 'User has already voted');\n        \n        pc.votes[msg.sender].choice = true;\n        pc.votes[msg.sender].voter = msg.sender;\n        pc.voteCount += 1;\n    }\n    \n    function downVote(uint _postOrCommentId) public {\n        PostOrComment storage pc = postsOrComments[_postOrCommentId];\n        \n        require(pc.votes[msg.sender].voter != msg.sender, 'User has already voted');\n        \n        pc.votes[msg.sender].choice = false;\n        pc.votes[msg.sender].voter = msg.sender;\n        pc.voteCount -= 1;\n    }\n    \n    function checkVote(uint _postOrCommentId, address _user) public view returns(bool){\n        PostOrComment storage pc = postsOrComments[_postOrCommentId];\n        return pc.votes[_user].choice;\n    }\n    \n    function checkTotalVotes(uint _postOrCommentId) public view returns(uint) {\n        PostOrComment storage pc = postsOrComments[_postOrCommentId];\n        return pc.voteCount;\n    }\n}\n"
+    }
+}
