@@ -14,29 +14,30 @@ function AuthWrapper({ onLoginNavigateTo, children }) {
   React.useEffect(() => {
     const login = async () => {
       if (auth.loading) return;
-      if (auth.isLoggedIn && auth?.user) {
-        setLoading(false);
-        navigate(onLoginNavigateTo);
+      const timeOut = setTimeout(async () => {
+        if (auth.isLoggedIn && auth?.user) {
+          setLoading(false);
+          navigate(onLoginNavigateTo);
 
-        const { user } = auth || {};
-        const q = query(
-          collection(db, "users"),
-          where("address", "==", user.address)
-        );
-        const docs = await getDocs(q);
-        if (docs.docs.length === 0) {
-          await addDoc(collection(db, "users"), {
-            address: user.address,
-            name: user.name,
-            authProvider: user.loginType,
-            email: user.email,
-            publicKey: user.publicKey,
-            picture: user.picture,
-          });
+          const { user } = auth || {};
+          const q = query(
+            collection(db, "users"),
+            where("address", "==", user.address)
+          );
+          const docs = await getDocs(q);
+          if (docs.docs.length === 0) {
+            await addDoc(collection(db, "users"), {
+              address: user.address,
+              name: user.name,
+              authProvider: user.loginType,
+              email: user.email,
+              publicKey: user.publicKey,
+              picture: user.picture,
+              credit: 3,
+            });
+          }
         }
-      } else {
-        navigate("/login");
-      }
+      }, 1000);
     };
     login();
   }, [auth, navigate, onLoginNavigateTo]);
