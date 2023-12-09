@@ -1,4 +1,11 @@
-import { Box, Grid, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Step,
+  StepLabel,
+  Stepper,
+  TextField,
+  Typography,
+} from "@mui/material";
 import GradientButton from "../../components/GradientButton";
 import Editor from "@monaco-editor/react";
 
@@ -8,11 +15,31 @@ import { LuHardHat } from "react-icons/lu";
 import LightButton from "../../components/LightButton";
 import YellowButton from "../../components/YellowButton";
 import { useState } from "react";
+
+const tempSteps = [
+  {
+    id: "01",
+    text: "Stuart added a feature request",
+  },
+  {
+    id: "01",
+    text: "Stuart added a feature request",
+  },
+  {
+    id: "01",
+    text: "Stuart added a feature request",
+  },
+  {
+    id: "01",
+    text: "Stuart added a feature request",
+  },
+];
+
 function EditorPage() {
   const [tabsLayout, setTabsLayout] = useState([33, 33, 33]);
 
   const onTabClick = (index) => {
-    setTabsLayout([6, 41, 41]);
+    setTabsLayout([4, 76, 20]);
   };
 
   return (
@@ -92,6 +119,8 @@ function EditorPage() {
                 <Box px={1} pt={1} height="100%">
                   <TextField
                     fullWidth
+                    multiline
+                    minRows={9}
                     sx={{
                       height: "100%",
                     }}
@@ -112,6 +141,7 @@ function EditorPage() {
           ) : (
             <Box
               sx={{
+                mt: 2,
                 display: "flex",
                 padding: "8px",
                 justifyContent: "center",
@@ -168,11 +198,34 @@ function EditorPage() {
               border: "1px solid #2E3C51",
               background: "rgba(255, 255, 255, 0.05)",
               height: "100%",
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+              pt: 2,
             }}
           >
             <Typography fontSize={18} fontWeight="bold" align="center">
               Steps to test it on RemixIDE
             </Typography>
+            <Box px={2} py={4}>
+              <Stepper
+                activeStep={-1}
+                orientation="vertical"
+                sx={{
+                  color: "white",
+                }}
+              >
+                {tempSteps.map(({ id, text }) => {
+                  return (
+                    <Step key={id}>
+                      <StepLabel color="white">
+                        <Box color="white">{text}</Box>
+                      </StepLabel>
+                    </Step>
+                  );
+                })}
+              </Stepper>
+            </Box>
           </Box>
           <YellowButton
             text="Download Hardhat"

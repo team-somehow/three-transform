@@ -1,19 +1,20 @@
-import { Outlet, createBrowserRouter } from 'react-router-dom';
-import { Box } from '@mui/material';
-import NotFound from '../pages/NotFound';
-import Home from '../pages/Home';
-import Navbar from '../components/Navbar';
-import Editor from '../pages/Editor';
-import Doc from '../pages/Doc';
+import { Outlet, createBrowserRouter } from "react-router-dom";
+import { Box } from "@mui/material";
+import NotFound from "../pages/NotFound";
+import Home from "../pages/Home";
+import Navbar from "../components/Navbar";
+import Editor from "../pages/Editor";
+import Doc from "../pages/Doc";
+import MagicOptions from "../pages/MagicOptions";
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: (
       <Box
         sx={{
-          height: '100%',
-          width: '100%',
+          height: "100%",
+          width: "100%",
         }}
       >
         <Navbar />
@@ -22,21 +23,25 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: '/',
+        path: "/",
         element: <Home />,
       },
       {
-        path: 'editor',
+        path: "editor",
         element: <Editor />,
       },
       {
-        path: 'doc',
+        path: "doc",
         element: <Doc />,
+      },
+      {
+        path: "options",
+        element: <MagicOptions />,
       },
     ],
   },
   {
-    path: '*',
+    path: "*",
     element: <NotFound />,
   },
 ]);
