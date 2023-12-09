@@ -8,6 +8,7 @@ import Doc from "../pages/Doc";
 import MagicOptions from "../pages/MagicOptions";
 import Login from "../pages/Login";
 import AuthWrapper from "../components/AuthWrapper";
+import GoogleLogin from "../pages/GoogleLogin";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/google-login",
+    element: <GoogleLogin />,
   },
   {
     path: "*",
