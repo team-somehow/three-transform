@@ -2,11 +2,12 @@ import React, { useContext } from "react";
 import { Box, ListItem, Typography, Divider, Button } from "@mui/material";
 import { Code, shadesOfPurple, CopyBlock } from "react-code-blocks";
 import { HashLink } from "react-router-hash-link";
-import { FaDownload } from "react-icons/fa";
+import { FaDownload, FaClipboardList } from "react-icons/fa";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { IoLogoJavascript } from "react-icons/io5";
 import { FaReact } from "react-icons/fa";
+
 import { FaPython } from "react-icons/fa";
 import { useState } from "react";
 import axios from "axios";
@@ -391,7 +392,7 @@ const contract = new Contract(${contractAddress}, ${contractName}.abi, signer);`
                     Download Artifacts
                   </Button>
                   <img src="arrow.svg" alt="------>" />
-                  <Button variant="outlined" startIcon={<FaDownload />}>
+                  <Button variant="outlined" startIcon={<FaClipboardList />}>
                     Copy files to frontend
                   </Button>
                 </Box>
