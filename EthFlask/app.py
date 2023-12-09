@@ -21,64 +21,84 @@ def generate_code():
     if is_test:
         response = {
             "response": {
-                "code": """pragma solidity ^0.8.0;
-
-                    contract RefundContract {
-                        enum Status { Pending, Verified, Refunded }
-                        mapping(address => Status) public refundStatus;
-                        address public seller;
-                        address public flipkartTeam;
-
-                        constructor(address _seller, address _flipkartTeam) {
-                            seller = _seller;
-                            flipkartTeam = _flipkartTeam;
-                        }
-
-                        function initiateRefund() public {
-                            require(refundStatus[msg.sender] == Status.Verified, 'Refund not verified');
-                            require(msg.sender == flipkartTeam, 'Only flipkart team can process refund');
-                            refundStatus[msg.sender] = Status.Refunded;
-                            // Process the refund
-                        }
-
-                        function verifyRefund() public {
-                            require(msg.sender == seller, 'Only seller can verify refund');
-                            refundStatus[msg.sender] = Status.Verified;
-                        }
-                    }""",
-                    "details": "This smart contract is designed to handle refunds and return policies. It includes an enum to track the status of the refund, mappings to store the refund status of each party, and functions to initiate and verify refunds. The contract also includes conditions to ensure that only the seller and flipkart team can initiate and verify refunds. The code needs to be tested further for complete functionality and integration."
-                }
+                "details": {
+                    "additional_notes": "This contract creates a voting system, where each post can be upvoted or downvoted. Votes are stored in a mapping to prevent double voting.",
+                    "compilation_status_confidence": 1.0,
+                    "completeness_confidence": 1.0
+                },
+                "solidity_code": """pragma solidity ^0.8.4; \n\n contract VotingSystem {\n\n struct Post {\n  uint id;\n  uint votes;\n  address poster;\n }\n\n Post[] public posts;\n\n mapping(address => mapping(uint => bool)) public votes;\n\n function createPost() public {\n  uint id = posts.length + 1;\n  posts.push(Post(id, 0, msg.sender));\n }\n\n function upvote(uint id) public {\n  require(!votes[msg.sender][id]);\n  votes[msg.sender][id] = true;\n  posts[id-1].votes++;\n }\n\n function downvote(uint id) public {\n  require(votes[msg.sender][id]);\n  votes[msg.sender][id] = false;\n  posts[id-1].votes--;\n }\n\n}"""
             }
-
+        }
         return jsonify(response)
 
     # return jsonify({"response":request.get_json()})
-    user_answer_1=request.get_json()['features']
-    user_approach=request.get_json()['approach']
-    prompt = f"Given the answer: {user_answer_1}, and the approach: {user_approach}, write a smart contract code by testing it before make the contract detailed."
-    schema={
-        "type":"object",
-        "properties":{
-            "code":{
-                "type":"string",
-                "description":"Give only the detailed solidity code after testing"
+    approach_heading=request.get_json()['approach_heading']
+    approach_content=request.get_json()['approach_content']
+    user_approach=request.get_json()['user_approach']
+
+    smart_contract_prompt = """
+        Develop a Solidity smart contract to implement the following approach for the web application:
+
+        Approach Heading: "{}"
+        
+        Approach Content:
+        {}
+
+        Additional Details:
+        {}
+
+        Your task is to provide the Solidity code for the smart contract that will effectively integrate this approach into the web application. 
+        Include relevant functions, variables, and any necessary logic to ensure the successful implementation of the specified feature.
+
+        Ensure that the generated Solidity code:
+        1. Compiles without errors.
+        2. Is complete and ready for deployment.
+
+        Note: Consider best practices and security considerations for smart contracts during the development.
+    """
+
+    smart_contract_prompt = smart_contract_prompt.format(approach_heading,approach_content,user_approach)
+
+
+    schema = {
+        "type": "object",
+        "properties": {
+            "solidity_code": {
+                "type": "string",
+                "description": "Generated Solidity code for the specified approach.",
             },
-            "details":
-            {
-                "type":"string",
-                "description":"All the remaining details regarding the contract"
-            }
+            "details": {
+                "type": "object",
+                "properties": {
+                    "compilation_status_confidence": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 100,
+                        "description": "Confidence level (between 1 and 100) for the compilation status of the generated Solidity code.",
+                    },
+                    "completeness_confidence": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 100,
+                        "description": "Confidence level (between 1 and 100) for the completeness of the generated Solidity code.",
+                    },
+                    "additional_notes": {
+                        "type": "string",
+                        "description": "Any additional notes or comments related to the generated Solidity code.",
+                    },
+                },
+                "required": ["compilation_status_confidence", "completeness_confidence"],
+                "description": "Details about the generated Solidity code.",
+            },
         },
-        "required":['code','details']
+        "required": ["solidity_code", "details"],
+        "description": "Schema for representing the generated Solidity code and related details.",
     }
+
     response=client.chat.completions.create(
-        model="gpt-3.5-turbo-1106",
+        model="gpt-4",
         messages=[
-                {"role": "system", "content": prompt},
-                {"role": "assistant", "content": f"Question 1: What features do you want your smart contract to implement"},
-                {"role": "user", "content": f"{user_answer_1}"},
-                {"role": "assistant", "content": f"Approach: The approach given by the user"},
-                {"role": "user", "content": f"{user_approach}"},
+            {"role": "system", "content": smart_contract_prompt},
         ],
         functions=[{"name": "print", "parameters": schema}],
         function_call={"name": "print"},
