@@ -1,3 +1,4 @@
-cd hardhat-base
-rm -rf contracts/*
-rm -rf test/*
+echo $1
+mkdir $1
+
+cp -r hardhat-base/* $1
