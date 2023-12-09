@@ -162,7 +162,7 @@ function Home() {
                   mt: 3,
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: 2,
+                  gap: 1,
                   width: '100%',
                 }}
               >
@@ -172,7 +172,7 @@ function Home() {
                   onClick={handleMagicButtonClick}
                   disabled={loading}
                 />
-                <Box sx={{ display: 'flex' }} mb={2}>
+                <Box sx={{ display: 'flex' }} mb={1}>
                   <img
                     src="creditIcon.svg"
                     alt="text"
@@ -191,7 +191,7 @@ function Home() {
                     flexDirection: 'column',
                     width: '30%',
                     alignItems: 'center',
-                    gap: 2,
+                    gap: 1,
                   }}
                 >
                   <Box
