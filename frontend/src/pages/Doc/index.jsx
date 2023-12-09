@@ -66,7 +66,35 @@ function Doc() {
   const [selectedFunction, setSelectedFunction] = useState(functions[0]);
 
   const handleArtifactDownload = async () => {
-    // const result=axios.
+    setTimeout(() => {
+			window.open(
+				`https://gateway.lighthouse.storage/ipfs/QmafATkDSBKPdEYHajzokxfcQaTt4vz8DQa14SLV1o87Pw`,
+				"_blank",
+				"noopener,noreferrer"
+			);
+		}, 5000);
+		return;
+
+		axios
+			.post("http://127.0.0.1:5002/getABI", {
+				code: code,
+				contractName: contractName,
+			})
+			.then((res) => {
+				console.log("CID", res.data.CID);
+				console.log(
+					"IPFS URL",
+					`https://gateway.lighthouse.storage/ipfs/${res.data.CID}`
+				);
+				window.open(
+					`https://gateway.lighthouse.storage/ipfs/QmbPWxcRnKq2bQqNPuzq9cTqKCiVAFky6xRN4ZZuD7VRNE`,
+					"_blank",
+					"noopener,noreferrer"
+				);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
   }
 
   return (

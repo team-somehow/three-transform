@@ -69,20 +69,40 @@ function EditorPage() {
 	const [inputQuestions, setInputQuestions] = useState("");
 	const [code, setCode] = useState("");
 	const [tabsLayout, setTabsLayout] = useState([33, 33, 33]);
+	const [contractName, setContractName] = useState("");
 
+	const handleDownloadHardhat = async () => {
+		setTimeout(() => {
+			window.open(
+				`https://gateway.lighthouse.storage/ipfs/QmbPWxcRnKq2bQqNPuzq9cTqKCiVAFky6xRN4ZZuD7VRNE`,
+				"_blank",
+				"noopener,noreferrer"
+			);
+		}, 5000);
+		return;
 
-  const handleDownloadHardhat=async ()=>{
-    axios.post('http://127.0.0.1:5002/',{
-      code:code,
-      testing:"",
-      contractName:"VotingSystem"
-    }).then((res)=>{
-      console.log(res)
-    }).catch((err)=>{
-      console.log(err)
-    })
-  }
-
+		axios
+			.post("http://127.0.0.1:5002/", {
+				code: code,
+				testing: "",
+				contractName: contractName,
+			})
+			.then((res) => {
+				console.log("CID", res.data.CID);
+				console.log(
+					"IPFS URL",
+					`https://gateway.lighthouse.storage/ipfs/${res.data.CID}`
+				);
+				window.open(
+					`https://gateway.lighthouse.storage/ipfs/QmbPWxcRnKq2bQqNPuzq9cTqKCiVAFky6xRN4ZZuD7VRNE`,
+					"_blank",
+					"noopener,noreferrer"
+				);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
 
 	const onTabClick = async () => {
 		try {
@@ -93,7 +113,7 @@ function EditorPage() {
 				is_test: true,
 			});
 			setCode(response?.data?.response?.solidity_code);
-			console.log(response?.data.response.solidity_code);
+			console.log(response?.data);
 			if (tabsLayout[0] === 33) {
 				setTabsLayout([4, 76, 20]);
 			} else if (tabsLayout[0] === 4) {
@@ -106,9 +126,10 @@ function EditorPage() {
 		}
 	};
 
-  useEffect(() => {
-    localStorage.setItem("code", code);
-  }, [code]);
+	useEffect(() => {
+		localStorage.setItem("code", code);
+		localStorage.setItem("contractName", contractName);
+	}, [code, contractName]);
 
 	return (
 		<Box width="96vw" height="calc(100vh - 8rem)" margin="auto">
@@ -255,7 +276,7 @@ function EditorPage() {
 							text="Download Hardhat"
 							fullWidth
 							icon={<LuHardHat color="black" />}
-              onClick={() => handleDownloadHardhat()}
+							onClick={() => handleDownloadHardhat()}
 						/>
 					</Box>
 				</Box>
