@@ -20,9 +20,9 @@ def hardhatCompiler():
         sol_file.write(data['testing'])
     run(['bash','script.sh'])
 
-    shutil.make_archive('hardhat-setup','zip','.')
+    shutil.make_archive('static/hardhat-setup','zip','.')
 
-    return jsonify(data)
+    return jsonify({"filename":"/static/hardhat-setup"})
 
 if __name__=="__main__":
     app.run(host='127.0.0.1',port=5002)
