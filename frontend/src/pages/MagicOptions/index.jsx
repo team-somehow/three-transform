@@ -20,17 +20,16 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 function MagicOptions() {
   const navigate = useNavigate();
   const { state } = useLocation();
-  console.log(state);
-  const [ideasList, setIdeasList] = useState([
-    {
-      id: "01",
-      text: "Use React and TypeScript to build custom tooling that unlocks teams within your organization to do their best work, at speed. Share them in your private extension store.",
-    },
-    {
-      id: "02",
-      text: "Use React and TypeScript to build custom tooling that unlocks teams within your organization to do their best work, at speed. Share them in your private extension store.Use React and TypeScript to build custom tooling that unlocks teams within your organization to do their best work, at speed. Share them in your private extension store.",
-    },
-  ]);
+  const [ideasList, setIdeasList] = useState([]);
+
+  React.useEffect(() => {
+    setIdeasList(
+      state?.options.map((option) => ({
+        id: "",
+        text: option?.content,
+      }))
+    );
+  }, [state]);
 
   const handleOptionOnClick = (id) => {
     console.log(id);
@@ -49,7 +48,7 @@ function MagicOptions() {
       height="calc(100vh - 8rem)"
     >
       <Box width="60%" mx="auto" pt={4} mb={3}>
-        <LinkInput isDisabled />
+        <LinkInput isDisabled defaultValue={state?.url} />
         <Typography
           align="center"
           sx={{
@@ -100,9 +99,7 @@ function MagicOptions() {
               }}
             >
               <Typography variant="body1" fontWeight={400}>
-                Use React and TypeScript to build custom tooling that unlocks
-                teams within your organization to do their best work, at speed.
-                Share them in your private extension store.
+                {state?.summary}
               </Typography>
             </Box>
           </Box>
@@ -110,49 +107,57 @@ function MagicOptions() {
             <Typography variant="h4" mt={3} mb={2} fontWeight={700}>
               Generated ideas
             </Typography>
-            {ideasList.map(({ id, text }, i) => {
-              return (
-                <ListItem
-                  key={i}
-                  disablePadding
-                  sx={{
-                    borderRadius: 2,
-                    background: "rgba(255, 255, 255, 0.10)",
-                    textAlign: "center",
-                    my: 2,
-                  }}
-                  onClick={() => handleOptionOnClick(id)}
-                >
-                  <ListItemButton
+            <List
+              sx={{
+                overflowY: "scroll",
+                height: 240,
+              }}
+            >
+              {ideasList.map(({ id, text }, i) => {
+                return (
+                  <ListItem
+                    key={i}
+                    disablePadding
                     sx={{
-                      px: 4,
-                      py: 1.6,
+                      borderRadius: 2,
+                      background: "rgba(255, 255, 255, 0.10)",
+                      textAlign: "center",
+                      my: 2,
                     }}
+                    onClick={() => handleOptionOnClick(id)}
                   >
-                    <ListItemIcon>
-                      <Box
-                        sx={{
-                          borderRadius: 1,
-                          background:
-                            "radial-gradient(100% 100% at 50% 50%, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.00) 100%), rgba(255, 255, 255, 0.20)",
-                          height: "3rem",
-                          width: "3rem",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          fontSize: "1.5rem",
-                          color: "white",
-                          mr: 4,
-                        }}
-                      >
-                        {id}
-                      </Box>
-                    </ListItemIcon>
-                    <ListItemText align="left" primary={text} />
-                  </ListItemButton>
-                </ListItem>
-              );
-            })}
+                    <ListItemButton
+                      sx={{
+                        px: 4,
+                        py: 1.6,
+                      }}
+                    >
+                      <ListItemIcon>
+                        <Box
+                          sx={{
+                            borderRadius: 1,
+                            background:
+                              "radial-gradient(100% 100% at 50% 50%, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.00) 100%), rgba(255, 255, 255, 0.20)",
+                            height: "3rem",
+                            width: "3rem",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            fontSize: "1.5rem",
+                            color: "white",
+                            mr: 4,
+                          }}
+                        >
+                          {i < 9 && "0"}
+                          {i + 1}
+                        </Box>
+                      </ListItemIcon>
+                      <ListItemText align="left" primary={text} />
+                    </ListItemButton>
+                  </ListItem>
+                );
+              })}
+            </List>
           </Box>
         </CardContent>
       </BottomCard>
