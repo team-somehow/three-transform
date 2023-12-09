@@ -92,7 +92,7 @@ function EditorPage() {
         }
       );
       await updateDoc(doc(db, "users", user?.address), {
-        snippet: {
+        urls: {
           url: state?.url,
           abi: response?.data?.ABI,
           abiUrl: response?.data?.ABI_URI,
