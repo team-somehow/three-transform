@@ -43,7 +43,10 @@ def hardhatDeploy():
     run(['bash','script2.sh',name])
     data=request.get_json()
     data=request.get_json()
-    with open(f"{name}/contracts/{data['contractName']}.sol", 'w+') as sol_file:
+
+    file_path = f"{name}/contracts/{data['contractName']}.sol"
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    with open(file_path, 'w+') as sol_file:
         sol_file.write(data['code'])
     deployText='''const hre = require("hardhat");
         async function main() {

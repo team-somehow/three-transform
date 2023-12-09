@@ -12,6 +12,13 @@ module.exports = {
       url: "https://polygon-testnet.public.blastapi.io",
       account: [`0x${MATIC_PRIVATE_KEY}`],
     },
+    scrollSepolia: {
+      url: "https://sepolia-rpc.scroll.io",
+      accounts:
+        process.env.MATIC_PRIVATE_KEY !== undefined
+          ? [process.env.PRIVATE_KEY]
+          : [],
+    },
   },
   paths: {
     artifacts: "artifacts",
