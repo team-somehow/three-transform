@@ -1,38 +1,42 @@
-*,
-*::before,
-*::after {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-  z-index: 3;
-}
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-body {
-  font-family: sans-serif;
-  position: relative;
-  min-width: 100vw;
-  min-height: 100vh;
-}
-body::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  transform-origin: center center;
-  background: #c00dc8;
-  width: 504px;
-  height: 504px;
-  filter: blur(250px);
-  animation: motion 10s alternate infinite ease-in-out;
-  z-index: 1;
-}
+  *,
+  *::before,
+  *::after {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    z-index: 3;
+  }
 
-@keyframes motion {
-  0% {
-    transform: translate(-50%, -50%) scale(0.8);
+  body {
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+    min-width: 100vw;
+    min-height: 100vh;
   }
-  100% {
-    transform: translate(-50%, -50%) scale(1);
+
+  body::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transform-origin: center center;
+    background: #c00dc8;
+    width: 504px;
+    height: 504px;
+    filter: blur(250px);
+    animation: motion 10s alternate infinite ease-in-out;
+    z-index: 1;
   }
-}
+
+  @keyframes motion {
+    0% {
+      transform: translate(-50%, -50%) scale(0.8);
+    }
+
+    100% {
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
