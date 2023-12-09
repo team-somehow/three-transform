@@ -7,6 +7,8 @@ import random
 from subprocess import run
 import subprocess
 from lighthouseweb3 import Lighthouse
+from web3 import Web3
+from solcx import compile_source
 lighthouseKeys='189af0ba.4f431b7ecc314f4ea25273a574b88111'
 lh = Lighthouse(token=lighthouseKeys)
 def uploadFile(address):
@@ -63,8 +65,8 @@ def hardhatDeploy():
         sol_file.write(deployText)
 
     result=run(['bash','deployscript.sh',name],stdout=subprocess.PIPE)
-    print(result.stdout.strip())
-    contractAddress=""
+    print(result.stdout.strip().decode('utf-8').split("Address:  "))
+    contractAddress=result.stdout.strip().decode('utf-8').split("Address:  ")[1]
     return jsonify({"Contract Address":contractAddress})
 
 @app.route('/getABI',methods=['GET',"POST"])
