@@ -1,42 +1,33 @@
-import React from 'react';
-import BottomCard from '../../components/BottomCard';
-import {
-  Box,
-  CardActions,
-  CardContent,
-  List,
-  ListItem,
-  Typography,
-  Divider,
-} from '@mui/material';
-import { Code, shadesOfPurple } from 'react-code-blocks';
+import { Box, ListItem, Typography, Divider } from "@mui/material";
+import { Code, shadesOfPurple } from "react-code-blocks";
+import { HashLink } from "react-router-hash-link";
 
 const data = [
   {
     id: 1,
-    text: 'Initial Setup',
+    text: "Initial Setup",
     subheadings: [
       {
         id: 1,
-        heading: 'Obtain ABI and Integrate into Frontend',
+        heading: "Obtain ABI and Integrate into Frontend",
         description:
-          'Retrieve the ABI (Application Binary Interface) of the smart contract and seamlessly integrate it into the frontend code to facilitate communication between the user interface and the blockchain',
+          "Retrieve the ABI (Application Binary Interface) of the smart contract and seamlessly integrate it into the frontend code to facilitate communication between the user interface and the blockchain",
       },
       {
         id: 2,
-        heading: ' Implement Arcana Login for Wallet Address Retrieval',
+        heading: " Implement Arcana Login for Wallet Address Retrieval",
         description:
-          'Integrate Arcana login functionality to enable users to log in, ensuring a secure and user-friendly experience while obtaining their wallet address for subsequent interactions with the smart contract.',
+          "Integrate Arcana login functionality to enable users to log in, ensuring a secure and user-friendly experience while obtaining their wallet address for subsequent interactions with the smart contract.",
       },
       {
         id: 3,
-        heading: 'Integrate Contract Connection Code',
+        heading: "Integrate Contract Connection Code",
         description:
-          'Embed the contract connection code directly into the relevant file where it is required, ensuring a smooth and efficient connection between the frontend and the smart contract on the blockchain.',
+          "Embed the contract connection code directly into the relevant file where it is required, ensuring a smooth and efficient connection between the frontend and the smart contract on the blockchain.",
       },
       {
         id: 4,
-        heading: 'Customize Contract Function Calls',
+        heading: "Customize Contract Function Calls",
         description:
           'Tailor the code to invoke the specific contract function based on the requirements, ensuring accurate and efficient execution. For example, initiate the function "sendName" with the parameter "name" for the desired blockchain interaction.',
       },
@@ -44,61 +35,61 @@ const data = [
   },
   {
     id: 2,
-    text: 'Function Endpoints',
+    text: "Function Endpoints",
     code: [
       {
         inputs: [
           {
-            user: 'address',
+            user: "address",
           },
           {
-            name: 'string',
+            name: "string",
           },
         ],
-        name: 'NameSet',
+        name: "NameSet",
         outputs: [],
       },
       {
         inputs: [
           {
-            _user: 'address',
+            _user: "address",
           },
         ],
-        name: 'getUserName',
+        name: "getUserName",
         outputs: [
           {
-            type: 'string',
+            type: "string",
           },
         ],
       },
       {
         inputs: [],
-        name: 'owner',
+        name: "owner",
         outputs: [
           {
-            type: 'address',
+            type: "address",
           },
         ],
       },
       {
         inputs: [
           {
-            _name: 'string',
+            _name: "string",
           },
         ],
-        name: 'setUserName',
+        name: "setUserName",
         outputs: [],
       },
       {
         inputs: [
           {
-            address: 'string',
+            address: "string",
           },
         ],
-        name: 'userNames',
+        name: "userNames",
         outputs: [
           {
-            type: 'string',
+            type: "string",
           },
         ],
       },
@@ -117,29 +108,36 @@ function Doc() {
     >
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'row',
-          width: '100%',
-          height: '100%',
-          borderRadius: '1rem',
-          border: '1px solid rgba(255, 255, 255, 0.20)',
-          background: 'linear-gradient(180deg, #2B243C 0%, #0B031E 100%)',
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "row",
+          width: "100%",
+          height: "100%",
+          borderRadius: "1rem",
+          border: "1px solid rgba(255, 255, 255, 0.20)",
+          background: "linear-gradient(180deg, #2B243C 0%, #0B031E 100%)",
         }}
       >
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            width: '20%',
-            height: '100%',
+            display: "flex",
+            flexDirection: "column",
+            width: "20%",
+            height: "100%",
             p: 2,
           }}
         >
           {data.map(({ id, text }) => (
-            <ListItem key={id} sx={{ display: 'list-item' }}>
-              <Typography variant="body" fontWeight={500}>
+            <ListItem key={id} sx={{ display: "list-item" }}>
+              <Typography
+                variant="body"
+                fontWeight={500}
+                component={HashLink}
+                color="white"
+                sx={{ textDecoration: "none" }}
+                to={"#" + text.replace(/\s+/g, "-").toLowerCase()}
+              >
                 {text}
               </Typography>
             </ListItem>
@@ -148,22 +146,23 @@ function Doc() {
         <Divider
           orientation="vertical"
           sx={{
-            bgcolor: '#EEEEF0',
+            bgcolor: "#EEEEF0",
           }}
         />
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            width: '80%',
-            height: '100%',
+            display: "flex",
+            flexDirection: "column",
+            width: "80%",
+            height: "100%",
             p: 2,
             pr: 10,
-            overflow: 'auto',
+            scrollBehavior: "smooth",
+            overflow: "auto",
           }}
         >
           {data.map(({ id, text, subheadings, code }) => (
-            <Box key={id}>
+            <Box key={id} id={text.replace(/\s+/g, "-").toLowerCase()}>
               <Typography variant="h4" fontWeight={700} mt={1}>
                 {text}
               </Typography>
@@ -174,6 +173,10 @@ function Doc() {
                     {heading}
                   </Typography>
                   <Typography variant="body" fontWeight={500}>
+                    {description}
+                    {description}
+                    {description}
+                    {description}
                     {description}
                   </Typography>
                 </Box>
@@ -186,7 +189,7 @@ function Doc() {
                   </Typography>
                   <Divider
                     sx={{
-                      bgcolor: 'grey',
+                      bgcolor: "grey",
                     }}
                   />
                   {endpoint.inputs?.[0] && (
@@ -200,8 +203,8 @@ function Doc() {
                       <Box
                         key={index}
                         sx={{
-                          display: 'flex',
-                          flexDirection: 'row',
+                          display: "flex",
+                          flexDirection: "row",
                           gap: 2,
                           mb: 1,
                           ml: 1,
@@ -209,12 +212,12 @@ function Doc() {
                       >
                         <Code
                           text={key}
-                          language={'javascript'}
+                          language={"javascript"}
                           theme={shadesOfPurple}
                         />
                         <Code
                           text={value}
-                          language={'javascript'}
+                          language={"javascript"}
                           theme={shadesOfPurple}
                         />
                       </Box>
@@ -231,8 +234,8 @@ function Doc() {
                       <Box
                         key={index}
                         sx={{
-                          display: 'flex',
-                          flexDirection: 'row',
+                          display: "flex",
+                          flexDirection: "row",
                           gap: 2,
                           mb: 1,
                           ml: 1,
@@ -240,12 +243,12 @@ function Doc() {
                       >
                         <Code
                           text={key}
-                          language={'javascript'}
+                          language={"javascript"}
                           theme={shadesOfPurple}
                         />
                         <Code
                           text={value}
-                          language={'javascript'}
+                          language={"javascript"}
                           theme={shadesOfPurple}
                         />
                       </Box>
