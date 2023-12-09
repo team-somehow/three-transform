@@ -136,7 +136,7 @@ def web_scrape():
         }
         return jsonify(response)
     
-    if website_url == "https://www.reddit.com/":
+    if website_url == "https://www.reddit.com/" or "reddit" in website_url:
         response = {
             "response": {
                 "approaches": [
