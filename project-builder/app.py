@@ -31,8 +31,8 @@ def hardhatCompiler():
     run(['bash','script.sh',name])
     shutil.make_archive(f'static/{name}','zip',name)
     print("Zip file made")
-    
-    return jsonify({"filename":f"/static/{name}.zip"})
+    upload=uploadFile(f'./static/{name}.zip')
+    return jsonify({"filename":f"/static/{name}.zip","CID":upload['data']['Hash']})
 
 
 @app.route('/hardhatDeploy',methods=['GET','POST'])
