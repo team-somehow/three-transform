@@ -86,16 +86,12 @@ function EditorPage() {
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [contractAdd, setContractAdd] = useState();
-  const [currentStep, setCurrentStep] = useState(-1);
+  const [currentStep, setCurrentStep] = useState(0);
   const handleDownloadHardhat = async () => {
-    setCurrentStep(-1);
-    const autoStepping = setInterval(() => {
-      setCurrentStep((prev) => prev + 1);
-      if (currentStep === 3) {
-        clearInterval(autoStepping);
-      }
-    }, 3000);
+    setCurrentStep(0);
     try {
+      setTimeout(() => setCurrentStep((prev) => prev + 1), 2000);
+      setTimeout(() => setCurrentStep((prev) => prev + 1), 2000);
       setLoading(true);
       const response = await axios.post(
         !isTest
@@ -119,13 +115,9 @@ function EditorPage() {
         },
       });
 
-      if (currentStep === 3) {
-        setCurrentStep(4);
-        setTimeout(() => {
-          window.open(response?.data?.HardHat, "_blank", "noopener,noreferrer");
-        }, 10000);
-        setLoading(false);
-      }
+      window.open(response?.data?.HardHat, "_blank", "noopener,noreferrer");
+
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -167,14 +159,13 @@ function EditorPage() {
   const deployContract = async () => {
     try {
       const response = await axios.post(
-        "https://magic-deploy.onrender.com",
+        "http://localhost:3003/deploy-contract" ||
+          "https://magic-deploy.onrender.com/deploy-contract",
         {
-          bytecode:
-            "0x608060405234801561001057600080fd5b50610762806100206000396000f3fe...",
-          abi: [
-            // ... (your contract ABI)
-          ],
           rpc: "https://rpc.public.zkevm-test.net",
+          bytecode: ABI?.bytecode,
+          abi: ABI?.abi,
+          is_test: isTest,
         },
         {
           headers: {
@@ -519,6 +510,7 @@ function EditorPage() {
             </Modal>
             <GradientButton
               icon={<GrDeploy />}
+              onClick={deployContract}
               text="Magic Deploy"
               fullWidth
               isDisabled={isDisabled}
