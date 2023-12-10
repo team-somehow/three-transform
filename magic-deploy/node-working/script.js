@@ -2,8 +2,12 @@ require("dotenv").config();
 
 const express = require("express");
 const { ethers } = require("ethers");
+const cors = require("cors");
 
 const app = express();
+
+app.use(cors());
+
 const port = 3003;
 
 app.use(express.json());
