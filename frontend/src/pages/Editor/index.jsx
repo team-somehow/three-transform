@@ -27,6 +27,7 @@ import { AppContext } from "../../context/AppContext";
 import { TestContext } from "../../context/TestContext";
 import { doc, updateDoc } from "firebase/firestore";
 import Modal from "@mui/material/Modal";
+import CustomizedDialogs from "../../components/LegacyDialog";
 
 const tempSteps = [
   {
@@ -85,12 +86,21 @@ function EditorPage() {
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [contractAdd, setContractAdd] = useState();
+  const [currentStep, setCurrentStep] = useState(-1);
   const handleDownloadHardhat = async () => {
+    setCurrentStep(-1);
+    const autoStepping = setInterval(() => {
+      setCurrentStep((prev) => prev + 1);
+      if (currentStep === 3) {
+        clearInterval(autoStepping);
+      }
+    }, 3000);
     try {
       setLoading(true);
       const response = await axios.post(
-        !isTest?
-        "https://49c4-2409-40f2-18-f350-f485-a4b8-b5b3-ae50.ngrok-free.app": "https://ethflask-fea7.onrender.com" + "/generateabi",
+        !isTest
+          ? "https://49c4-2409-40f2-18-f350-f485-a4b8-b5b3-ae50.ngrok-free.app"
+          : "https://ethflask-fea7.onrender.com" + "/generateabi",
         {
           code: code,
           testing: "",
@@ -108,10 +118,16 @@ function EditorPage() {
           contractName: response.data.ABI.contractName,
         },
       });
+
+      if (currentStep === 3) {
+        setCurrentStep(4);
+        setTimeout(() => {
+          window.open(response?.data?.HardHat, "_blank", "noopener,noreferrer");
+        }, 10000);
+        setLoading(false);
+      }
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false); // Set loading to false regardless of success or failure
     }
   };
 
@@ -151,7 +167,7 @@ function EditorPage() {
   const deployContract = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3003/deploy-contract",
+        "https://magic-deploy.onrender.com",
         {
           bytecode:
             "0x608060405234801561001057600080fd5b50610762806100206000396000f3fe...",
@@ -514,6 +530,19 @@ function EditorPage() {
           </Box>
         </Box>
       </Box>
+      <CustomizedDialogs
+        steps={[
+          "Scaffolding hardhat",
+          "Inserting your contract",
+          "Running npc hardhat compile",
+          "Zipping files",
+          "Uploading to lighthouse",
+        ]}
+        text={"Downloading Hardhat"}
+        setOpen={setLoading}
+        open={loading}
+        stepCount={currentStep}
+      />
     </>
   );
 }
