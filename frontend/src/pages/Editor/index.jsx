@@ -90,9 +90,9 @@ function EditorPage() {
   const handleDownloadHardhat = async () => {
     setCurrentStep(0);
     try {
-      setTimeout(() => setCurrentStep((prev) => prev + 1), 2000);
-      setTimeout(() => setCurrentStep((prev) => prev + 1), 2000);
       setLoading(true);
+      await new Promise((resolve) => setTimeout(resolve, 4000));
+      setCurrentStep(1);
       const response = await axios.post(
         !isTest
           ? "https://49c4-2409-40f2-18-f350-f485-a4b8-b5b3-ae50.ngrok-free.app"
@@ -104,6 +104,9 @@ function EditorPage() {
           is_test: isTest,
         }
       );
+      setCurrentStep(2);
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      setCurrentStep(3);
       setABI(response?.data?.ABI);
       await updateDoc(doc(db, "users", user?.address), {
         urls: {
@@ -115,8 +118,10 @@ function EditorPage() {
         },
       });
 
+      await new Promise((resolve) => setTimeout(resolve, 6000));
+      setCurrentStep(4);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       window.open(response?.data?.HardHat, "_blank", "noopener,noreferrer");
-
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -191,7 +196,7 @@ function EditorPage() {
 
   const handleModalClose = () => {
     setIsModalOpen(false);
-    window.location.href = "/doc";
+    window.location.href = "/";
   };
 
   return (
@@ -495,13 +500,13 @@ function EditorPage() {
                 }}
               >
                 <Typography variant="h5" mb={2}>
-                  Successfully logged in to your account!
+                  Successfully deployed your contract!
                 </Typography>
                 <Typography variant="body2" mb={2}>
-                  This is your wallet address:
+                  This is your contract address:
                 </Typography>
                 <Typography variant="body2" mb={2} fontWeight={600}>
-                  {contractAdd}
+                  {"walletAddress"}
                 </Typography>
                 <Button variant="contained" onClick={handleModalClose}>
                   Next
