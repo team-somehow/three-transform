@@ -164,7 +164,6 @@ function EditorPage() {
   const deployContract = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3003/deploy-contract" ||
           "https://magic-deploy.onrender.com/deploy-contract",
         {
           rpc: "https://rpc.public.zkevm-test.net",
