@@ -1,7 +1,7 @@
 import { RouterProvider } from 'react-router-dom';
 import router from './config/router';
 import StyleThemeProvider from './theme/ThemeProvider';
-
+import { SnackbarProvider } from 'notistack';
 import { AppContext } from './context/AppContext';
 import { TestContext } from './context/TestContext';
 
@@ -37,7 +37,9 @@ function App() {
       >
         <TestContext.Provider value={true}>
           <StyleThemeProvider>
-            <RouterProvider router={router} />
+            <SnackbarProvider maxSnack={3} autoHideDuration={5000}>
+              <RouterProvider router={router} />
+            </SnackbarProvider>
           </StyleThemeProvider>
         </TestContext.Provider>
       </AppContext.Provider>
