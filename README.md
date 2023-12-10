@@ -44,3 +44,7 @@ cd frontend
 npm i
 npm run dev
 ```
+
+## Architecture Diagram
+
+![Architecture](./assets/architecture.png)
