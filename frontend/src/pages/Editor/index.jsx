@@ -191,7 +191,7 @@ function EditorPage() {
 
   const handleModalClose = () => {
     setIsModalOpen(false);
-    window.location.href = "/";
+    window.location.href = "/doc";
   };
 
   return (
@@ -501,7 +501,7 @@ function EditorPage() {
                   This is your wallet address:
                 </Typography>
                 <Typography variant="body2" mb={2} fontWeight={600}>
-                  {"walletAddress"}
+                  {contractAdd}
                 </Typography>
                 <Button variant="contained" onClick={handleModalClose}>
                   Next

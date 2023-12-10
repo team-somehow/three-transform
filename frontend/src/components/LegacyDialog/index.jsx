@@ -60,7 +60,7 @@ export default function CustomizedDialogs(props) {
         sx={{
           '& .MuiDialog-paper': {
             background: 'rgba(255, 255, 255, 0.05)',
-            backdropFilter: 'blur(10px)',
+            backdropFilter: 'blur(40px)',
             boxShadow: '0px 0px 20px 0px rgba(236, 39, 182, 0.60)',
           },
         }}
@@ -105,14 +105,6 @@ export default function CustomizedDialogs(props) {
           )}
         </DialogContent>
         <DialogActions>
-          <Button
-            autoFocus
-            disabled={props.stepCount !== steps.length - 1 || props.error}
-            onClick={handleClose}
-            fullWidth
-          >
-            Close
-          </Button>
         </DialogActions>
       </BootstrapDialog>
     </div>
