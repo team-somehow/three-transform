@@ -222,6 +222,7 @@ function Doc() {
       if (i !== selectedFunction.inputs.length - 1) {
         stringOfID3 += `,`;
       }
+      
     }
     stringOfID3 += `);`;
     stringOfID3 += `
