@@ -213,6 +213,7 @@ def RESTAPI():
                 })
             
         response.append(temp)
+    return jsonify(response)
 
 @app.route("/generateabi",methods=['GET','POST'])
 def generateOBI():
