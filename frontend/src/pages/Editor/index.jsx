@@ -85,12 +85,12 @@ function EditorPage() {
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [contractAdd, setContractAdd] = useState();
-
   const handleDownloadHardhat = async () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        "https://49c4-2409-40f2-18-f350-f485-a4b8-b5b3-ae50.ngrok-free.app",
+        !isTest?
+        "https://49c4-2409-40f2-18-f350-f485-a4b8-b5b3-ae50.ngrok-free.app": "https://ethflask-fea7.onrender.com" + "/generateabi",
         {
           code: code,
           testing: "",
