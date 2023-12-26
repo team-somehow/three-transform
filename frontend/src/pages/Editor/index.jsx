@@ -164,9 +164,9 @@ function EditorPage() {
   const deployContract = async () => {
     try {
       const response = await axios.post(
-          "https://magic-deploy.onrender.com/deploy-contract",
+        "https://magic-deploy.onrender.com/deploy-contract",
         {
-          rpc: "https://rpc.public.zkevm-test.net",
+          rpc: "https://polygon-mumbai.g.alchemy.com/v2/3wk4SXoy1syqjJAwuTlh0lzshqj8-ohH",
           bytecode: ABI?.bytecode,
           abi: ABI?.abi,
           is_test: isTest,
